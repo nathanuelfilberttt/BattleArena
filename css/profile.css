@@ -1,0 +1,779 @@
+/* Profile Page Styles */
+.profile-header-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.profile-back-btn:hover {
+    transform: scale(1.1);
+}
+
+.profile-back-btn .back-icon {
+    width: 26px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.profile-header-outside {
+    font-size: var(--font-5xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin: var(--spacing-3xl) 0 var(--spacing-xl) 0;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--pink-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-container {
+    width: 800px;
+    max-width: 95%;
+    background: linear-gradient(135deg, var(--card-bg-light) 0%, rgba(255, 255, 255, 0.98) 100%);
+    margin: 0 auto var(--spacing-xl) auto;
+    padding: var(--spacing-2xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--card-border);
+    font-family: 'League Spartan', sans-serif;
+    transition: all var(--transition-base);
+}
+
+.profile-container:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    border-color: var(--card-border-hover);
+}
+
+.profile-box {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2xl);
+    align-items: flex-start;
+}
+
+.avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 4px solid rgba(255, 0, 110, 0.2);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-base);
+    cursor: pointer;
+}
+
+.avatar:hover {
+    border-color: var(--pink-accent);
+    box-shadow: var(--shadow-pink);
+    transform: scale(1.02);
+}
+
+.profile-right {
+    text-align: left;
+    width: 450px;
+}
+
+.profile-right label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+    color: var(--text-dark);
+    font-family: 'League Spartan', sans-serif;
+}
+
+.field-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-container-gap {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.input-container-gap input,
+.input-container-gap select {
+    flex-grow: 1;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 2px solid transparent;
+    background-color: var(--input-bg-light);
+    color: var(--text-dark);
+    font-size: var(--font-base);
+    height: auto;
+    border-radius: var(--radius-md);
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 500;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.input-container-gap input:focus,
+.input-container-gap select:focus {
+    outline: none;
+    border-color: var(--fuchsia);
+    box-shadow: 0 0 0 4px rgba(244, 57, 128, 0.12), var(--shadow-md);
+    background: var(--card-bg);
+}
+
+.input-container-gap input:not([readonly]) {
+    border: 1px solid var(--fuchsia);
+}
+
+.input-container-gap select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+#joinDateInput {
+    padding: 12px 15px;
+    border: none;
+    background-color: var(--input-bg-light);
+    color: var(--text-dark);
+    font-size: 1em;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.edit-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.edit-btn:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+.edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1;
+    object-fit: contain;
+}
+
+.edit-btn:hover img {
+    transform: scale(1.1);
+}
+
+.fuchsia-btn {
+    background: linear-gradient(135deg, var(--fuchsia) 0%, #e91e63 100%);
+}
+
+.fuchsia-btn:hover {
+    background: linear-gradient(135deg, #e91e63 0%, var(--fuchsia) 100%);
+}
+
+.blue-btn {
+    background: linear-gradient(135deg, var(--blue) 0%, #1976d2 100%);
+}
+
+.blue-btn:hover {
+    background: linear-gradient(135deg, #1976d2 0%, var(--blue) 100%);
+}
+
+/* Dropdown icon rotation animation */
+.edit-btn.blue-btn img {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bottom-section {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    margin-top: 40px;
+}
+
+.stats-box,
+.upload-box {
+    padding: 25px;
+    width: 380px;
+    border-radius: 12px;
+    background: var(--orange);
+    color: var(--stats-text-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'League Spartan', sans-serif;
+}
+
+.stats-box h2,
+.upload-box h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--stats-text-dark);
+}
+
+.stats-box .stat-item {
+    background: var(--card-bg-light);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    padding: 10px 15px;
+    margin-top: 8px;
+    border-radius: 5px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.stats-box .stat-item span {
+    background: none;
+    color: var(--text-dark);
+    padding: 0;
+    font-weight: 700;
+    text-align: right;
+}
+
+.upload-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.view-all-link {
+    color: var(--fuchsia);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.view-all-link:hover {
+    color: var(--pink-dark);
+    text-decoration: underline;
+}
+
+.upload-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    overflow: hidden;
+}
+
+.upload-list img {
+    width: 100%;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.upload-list img:hover {
+    transform: scale(1.05);
+}
+
+.dropdown-list {
+    position: absolute;
+    width: 100%;
+    background: var(--card-bg-light);
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+    margin-top: 8px;
+    display: none;
+    text-align: left;
+    color: var(--text-dark);
+    font-family: 'League Spartan', sans-serif;
+    overflow: hidden;
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-list div {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-list div:last-child {
+    border-bottom: none;
+}
+
+.dropdown-list div:hover {
+    background: linear-gradient(135deg, rgba(244, 57, 128, 0.1) 0%, rgba(244, 57, 128, 0.05) 100%);
+    padding-left: 20px;
+    color: var(--fuchsia);
+}
+
+.dropdown-list div[style*="background-color"] {
+    background: linear-gradient(135deg, var(--fuchsia) 0%, #e91e63 100%) !important;
+    color: white;
+    font-weight: 700;
+}
+
+.logout-btn {
+    background: var(--fuchsia);
+    color: var(--text-light);
+    border: none;
+    padding: 11px 38px;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.25s;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.logout-btn:hover {
+    background: #d4396c;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg-light);
+    color: var(--text-dark);
+    padding: 40px 50px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    font-family: 'League Spartan', sans-serif;
+}
+
+.modal-content p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin: 0 10px;
+    font-weight: bold;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.modal-btn.no {
+    background-color: #DD2C00;
+    color: white;
+}
+
+.modal-btn.yes {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Responsive for Profile */
+@media (max-width: 768px) {
+    .profile-container {
+        width: 95%;
+        padding: 25px;
+    }
+
+    .profile-box {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .profile-right {
+        width: 100%;
+        text-align: center;
+    }
+
+    .bottom-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .stats-box,
+    .upload-box {
+        width: 100%;
+    }
+
+    .profile-header-outside {
+        font-size: 40px;
+        margin: 80px 0 30px 0;
+    }
+}
+
+/* Edit Username Modal */
+.edit-username-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.edit-username-modal.show {
+    display: flex;
+}
+
+.edit-username-modal-content {
+    width: 500px;
+    max-width: 95%;
+    background: var(--card-bg-light);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.3s ease;
+    position: relative;
+    font-family: 'League Spartan', sans-serif;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.edit-username-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--card-border);
+}
+
+.edit-username-modal-header h2 {
+    color: var(--text-dark);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.edit-username-close {
+    background: transparent;
+    border: none;
+    color: var(--text-dark);
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.edit-username-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(90deg);
+}
+
+.edit-username-modal .form-group {
+    margin-bottom: 20px;
+}
+
+.edit-username-modal .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.edit-username-modal .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'League Spartan', sans-serif;
+    background: var(--input-bg-light);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.edit-username-modal .form-group input:focus {
+    outline: none;
+    border-color: var(--fuchsia);
+    box-shadow: 0 0 0 4px rgba(244, 57, 128, 0.12);
+    background: var(--card-bg);
+}
+
+.edit-username-modal .form-group input:hover:not(:focus) {
+    border-color: var(--card-border-hover);
+}
+
+.edit-username-modal-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 25px;
+    justify-content: flex-end;
+}
+
+.edit-username-modal-buttons .btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'League Spartan', sans-serif;
+    cursor: pointer;
+    border: none;
+}
+
+.edit-username-modal-buttons .btn-secondary {
+    background: var(--card-border);
+    color: var(--text-dark);
+}
+
+.edit-username-modal-buttons .btn-secondary:hover {
+    background: var(--card-border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-username-modal-buttons .btn:not(.btn-secondary) {
+    background: linear-gradient(135deg, var(--fuchsia) 0%, var(--pink-light) 100%);
+    color: white;
+}
+
+.edit-username-modal-buttons .btn:not(.btn-secondary):hover {
+    background: linear-gradient(135deg, var(--pink-light) 0%, var(--fuchsia) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 57, 128, 0.35);
+}
+
+.edit-username-modal-buttons .btn:active {
+    transform: translateY(0);
+}
+
+#editAlert {
+    margin-bottom: 20px;
+}
+
+#editAlert .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'League Spartan', sans-serif;
+}
+
+#editAlert .alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+#editAlert .alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+@media (max-width: 768px) {
+    .edit-username-modal-content {
+        width: 95%;
+        padding: 25px;
+    }
+    
+    .edit-username-modal-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .edit-username-modal-buttons {
+        flex-direction: column-reverse;
+    }
+    
+    .edit-username-modal-buttons .btn {
+        width: 100%;
+    }
+}
+
+/* Modal Styles (moved from profile.html) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 40px 50px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-confirm,
+.btn-cancel {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-confirm {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #ef4444;
+    color: white;
+}
+
+.logout-btn {
+    cursor: pointer !important;
+}
+

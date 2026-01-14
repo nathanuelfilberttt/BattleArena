@@ -1,0 +1,430 @@
+/* Achievement Section */
+.achievement-section {
+    position: relative;
+    min-height: calc(100vh - 200px);
+    padding: 1.5rem 0;
+    overflow: hidden;
+}
+
+.achievement-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Achievement Main Title */
+.achievement-section .profile-header-outside {
+    font-size: var(--font-5xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin: var(--spacing-xl) 0 var(--spacing-xl) 0;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--pink-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Achievement Container */
+.achievement-container {
+    width: 1000px;
+    max-width: 95%;
+    background: transparent;
+    margin: 0 auto 45px auto;
+    padding: 0;
+    position: relative;
+    font-family: 'League Spartan', sans-serif;
+}
+
+/* Achievement Header */
+.achievement-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0;
+    padding-bottom: 20px;
+}
+
+/* Total Uploads Box */
+.total-wins-box {
+    background: linear-gradient(135deg, #ff6600 0%, #ff8800 100%);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 600;
+    white-space: nowrap;
+    width: fit-content;
+    font-family: 'League Spartan', sans-serif;
+    box-shadow: 0 4px 16px rgba(255, 102, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all var(--transition-base);
+}
+
+.total-wins-box:hover {
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+.total-wins-box strong {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+/* Achievement List - VERTICAL CARDS (1 per row) */
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--card-bg-light);
+    padding: 45px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.achievement-item {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.98) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--card-border);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    min-height: 140px;
+}
+
+.achievement-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--card-border-hover);
+}
+
+.achievement-item.unlocked {
+    border-left: 4px solid var(--success-color);
+}
+
+.achievement-item.locked {
+    opacity: 0.85;
+}
+
+/* Achievement Title Box (Sisi Kiri) */
+.achievement-title-box {
+    width: 200px;
+    padding: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'League Spartan', sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+/* Achievement Content (Tengah) */
+.achievement-description {
+    flex-grow: 1;
+    padding: 20px;
+    color: var(--text-secondary);
+    font-size: 1.1em;
+    font-family: 'League Spartan', sans-serif;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.achievement-description p {
+    margin: 0 0 10px 0;
+    color: #000000;
+    font-size: 1em;
+}
+
+/* Achievement Progress Bar */
+.achievement-progress {
+    margin-top: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399); /* Hijau gradient */
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    display: block;
+    text-align: left;
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+    font-family: 'League Spartan', sans-serif;
+}
+
+/* Button Use Title (Sisi Kanan) */
+.btn-use-title {
+    width: 140px;
+    padding: 0 20px;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-family: 'League Spartan', sans-serif;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.btn-use-title.enabled {
+    background: var(--pink-accent);
+    color: white;
+}
+
+.btn-use-title.enabled:hover {
+    background: #d4396c;
+}
+
+.btn-use-title.disabled {
+    background: #627077;
+    color: white;
+    cursor: not-allowed;
+}
+
+.btn-use-title.using {
+    background: var(--success-color);
+    color: white;
+}
+
+.btn-use-title:disabled {
+    opacity: 1;
+    cursor: not-allowed;
+    background: #627077;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .achievement-container {
+        width: 95%;
+        max-width: none;
+    }
+    
+    .achievement-title-box {
+        width: 180px;
+        padding: 15px;
+    }
+    
+    .btn-use-title {
+        width: 120px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .achievement-item {
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .achievement-title-box {
+        width: 100%;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 15px;
+        min-height: 60px;
+    }
+    
+    .achievement-description {
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .progress-text {
+        text-align: center;
+    }
+    
+    .btn-use-title {
+        width: 100%;
+        padding: 15px;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        min-height: 50px;
+    }
+    
+    .achievement-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .total-wins-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .achievement-section .profile-header-outside {
+        font-size: 40px;
+        margin: 80px 0 30px 0;
+    }
+    
+    .achievements-list {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievement-section .profile-header-outside {
+        font-size: 32px;
+        margin: 60px 0 20px 0;
+    }
+    
+    .achievements-list {
+        padding: 20px;
+        border-radius: 15px;
+    }
+    
+    .achievement-title-box {
+        font-size: 1em;
+        padding: 12px;
+    }
+    
+    .achievement-description p {
+        font-size: 0.9em;
+    }
+    
+    .btn-use-title {
+        padding: 12px;
+        font-size: 0.9em;
+    }
+}
+
+/* Achievement Notification Pop-up */
+.achievement-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: none;
+    animation: slideInRight 0.3s ease;
+}
+
+.achievement-notification.show {
+    display: block;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.achievement-notification-content {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 320px;
+    max-width: 400px;
+    position: relative;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.achievement-notification-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.achievement-notification-text {
+    flex: 1;
+}
+
+.achievement-notification-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.achievement-notification-message {
+    font-size: 0.95rem;
+    opacity: 0.95;
+}
+
+.achievement-notification-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.achievement-notification-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .achievement-notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .achievement-notification-content {
+        min-width: auto;
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/comment.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png" alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Comment Page Section -->
+    <section class="comment-page-section">
+        <div class="container">
+            <div class="comment-page-wrapper">
+                <button class="comment-back-btn" onclick="goBack()">
+                    <img src="assets/back-black.png" alt="Back" class="close-icon">
+                </button>
+                
+                <div class="comment-page-body">
+                    <div class="comment-meme-section">
+                        <div class="comment-meme-image-container">
+                            <img id="commentMemeImage" src="" alt="Meme" class="comment-meme-image">
+                        </div>
+                    </div>
+                    <div class="comment-details-section">
+                        <div class="comment-post-details">
+                            <div class="comment-vote-buttons">
+                                <button class="comment-vote-btn comment-vote-up" id="commentVoteUp">
+                                    <img src="assets/up-vote.png" alt="Up"> <span id="commentUpvoteCount">120</span>
+                                </button>
+                                <button class="comment-vote-btn comment-vote-down" id="commentVoteDown">
+                                    <img src="assets/down-vote.png" alt="Down"> <span id="commentDownvoteCount">10</span>
+                                </button>
+                            </div>
+                            <h2 id="commentMemeTitle" class="comment-meme-title"></h2>
+                            <div class="comment-meme-user">
+                                <span class="comment-user-icon">🧙</span>
+                                <span id="commentMemeUsername" class="comment-username"></span>
+                            </div>
+                            <p id="commentMemeDescription" class="comment-meme-description"></p>
+                            <div id="commentMemeCategories" class="comment-meme-categories"></div>
+                        </div>
+                        <div class="comment-comments-section">
+                            <h3 class="comment-section-title">Comments</h3>
+                            <div id="commentDisabledMessage" class="comment-disabled-message" style="display: none;">
+                                <span class="comment-disabled-icon">🔒</span>
+                                <span class="comment-disabled-text">Comments are disabled for this meme</span>
+                            </div>
+                            <div id="commentList" class="comment-list">
+                                <!-- Comments will be loaded here -->
+                            </div>
+                            <div class="comment-input-container" id="commentInputContainer">
+                                <input type="text" id="commentInput" class="comment-input" placeholder="Drop ur comment......" disabled>
+                                <button class="comment-send-btn" onclick="submitComment()" disabled>
+                                    <img src="assets/send.png" alt="Send" class="send-icon">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Comment.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const memeRepository = new MemeRepository();
+        const memeService = new MemeService();
+        const userRepository = new UserRepository();
+        let currentMemeId = null;
+
+        // Helper function to ensure dummy comments are created
+        function ensureDummyComments() {
+            // Access database - it's a global singleton
+            if (typeof database === 'undefined') {
+                console.error('Database not available');
+                return 0;
+            }
+            
+            const allComments = database.getAll('comments');
+            const allMemes = database.getAll('memes');
+            
+            if (allComments.length === 0 && allMemes.length > 0) {
+                console.log('Creating dummy comments for', allMemes.length, 'memes');
+                const dummyComments = [];
+                const commentUsernames = [
+                    'username', 'meme_lover', 'funny_guy', 'dark_humor', 'wholesome_user',
+                    'reaction_master', 'meme_king', 'laugh_factory', 'comedy_central', 'joke_teller',
+                    'humor_seeker', 'meme_collector', 'funny_bone', 'laugh_out_loud', 'comedy_gold'
+                ];
+                
+                const commentTexts = [
+                    'ini isi comment nya',
+                    'Meme ini sangat lucu! 😂',
+                    'Relatable banget!',
+                    'Hahaha ini beneran terjadi sama aku',
+                    'Top tier meme!',
+                    'Ini yang aku cari!',
+                    'Mantap gan!',
+                    'LOL ini terlalu akurat',
+                    'Bener banget sih',
+                    'Ini meme terbaik hari ini',
+                    'Saya setuju dengan ini',
+                    'Ini membuat hari saya lebih baik',
+                    'Kocak abis!',
+                    'Meme of the year!',
+                    'Ini harus viral!',
+                    'Perfect timing!',
+                    'Sangat relate!',
+                    'Ini beneran terjadi',
+                    'Hahaha mantap',
+                    'Ini yang paling lucu'
+                ];
+
+                allMemes.forEach((meme) => {
+                    const commentCount = Math.floor(Math.random() * 6) + 3;
+                    for (let i = 0; i < commentCount; i++) {
+                        const randomUsername = commentUsernames[Math.floor(Math.random() * commentUsernames.length)];
+                        const randomText = commentTexts[Math.floor(Math.random() * commentTexts.length)];
+                        const daysAgo = Math.floor(Math.random() * 7);
+                        const createdAt = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000 - Math.random() * 24 * 60 * 60 * 1000).toISOString();
+                        
+                        dummyComments.push({
+                            id: database.generateId(),
+                            memeId: meme.id,
+                            userId: `user${Math.floor(Math.random() * 10) + 1}`,
+                            username: randomUsername,
+                            text: randomText,
+                            createdAt: createdAt
+                        });
+                    }
+                });
+
+                dummyComments.forEach(comment => {
+                    database.create('comments', comment);
+                });
+                
+                allMemes.forEach(meme => {
+                    const memeComments = dummyComments.filter(c => c.memeId === meme.id);
+                    if (memeComments.length > 0) {
+                        database.update('memes', meme.id, { commentCount: memeComments.length });
+                    }
+                });
+                
+                console.log('Created', dummyComments.length, 'dummy comments');
+                return dummyComments.length;
+            }
+            return 0;
+        }
+
+        // Get meme ID from URL parameter
+        function getMemeIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function loadMemeDetails() {
+            const memeId = getMemeIdFromURL();
+            if (!memeId) {
+                alert('Meme ID tidak ditemukan');
+                window.location.href = 'arena.html';
+                return;
+            }
+
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'member' && currentUser.role !== 'moderator')) {
+                alert('Hanya member dan moderator yang dapat melihat komentar');
+                window.location.href = 'arena.html';
+                return;
+            }
+
+            currentMemeId = memeId;
+            const meme = memeRepository.findById(memeId);
+            if (!meme) {
+                alert('Meme tidak ditemukan');
+                window.location.href = 'arena.html';
+                return;
+            }
+
+            // Populate meme details
+            document.getElementById('commentMemeImage').src = meme.imageUrl;
+            document.getElementById('commentMemeTitle').textContent = meme.title || 'Untitled';
+            document.getElementById('commentMemeUsername').textContent = '@' + (meme.username || 'username');
+            document.getElementById('commentMemeDescription').textContent = meme.description || 'Description ini adalah meme yang akan digunakan sebagai dummy';
+            document.getElementById('commentUpvoteCount').textContent = meme.voteCount || 120;
+            document.getElementById('commentDownvoteCount').textContent = meme.downvoteCount || 10;
+
+            // Populate categories with different colors (red, purple, blue)
+            const categoriesContainer = document.getElementById('commentMemeCategories');
+            const categoryColors = ['#ef4444', '#8b5cf6', '#2563eb']; // Red, Purple, Blue
+            const categories = [
+                meme.category || 'kategories',
+                'kategories',
+                'kategories'
+            ];
+            categoriesContainer.innerHTML = categories.map((cat, index) => 
+                `<span class="comment-category-tag" style="background: ${categoryColors[index]};">#${cat.toLowerCase()}</span>`
+            ).join('');
+
+            // Check if comments are disabled
+            const isCommentsDisabled = meme.statusComments === 'disabled';
+            const commentDisabledMessage = document.getElementById('commentDisabledMessage');
+            const commentInput = document.getElementById('commentInput');
+            const commentSendBtn = document.querySelector('.comment-send-btn');
+            const commentInputContainer = document.getElementById('commentInputContainer');
+
+            if (isCommentsDisabled) {
+                // Show disabled message
+                if (commentDisabledMessage) {
+                    commentDisabledMessage.style.display = 'flex';
+                }
+                // Disable input and button
+                if (commentInput) {
+                    commentInput.disabled = true;
+                    commentInput.placeholder = 'Komentar telah dinonaktifkan';
+                }
+                if (commentSendBtn) {
+                    commentSendBtn.disabled = true;
+                    commentSendBtn.style.opacity = '0.5';
+                    commentSendBtn.style.cursor = 'not-allowed';
+                }
+                if (commentInputContainer) {
+                    commentInputContainer.style.opacity = '0.6';
+                }
+            } else {
+                // Hide disabled message
+                if (commentDisabledMessage) {
+                    commentDisabledMessage.style.display = 'none';
+                }
+                // Enable input and button
+                if (commentInput) {
+                    commentInput.disabled = false;
+                    commentInput.placeholder = 'Drop ur comment......';
+                }
+                if (commentSendBtn) {
+                    commentSendBtn.disabled = false;
+                    commentSendBtn.style.opacity = '1';
+                    commentSendBtn.style.cursor = 'pointer';
+                }
+                if (commentInputContainer) {
+                    commentInputContainer.style.opacity = '1';
+                }
+            }
+
+            // Load comments
+            loadComments();
+        }
+
+        function loadComments() {
+            if (!currentMemeId) {
+                console.log('No currentMemeId');
+                return;
+            }
+
+            console.log('Loading comments for memeId:', currentMemeId);
+            const allComments = memeService.getComments(currentMemeId);
+            console.log('Found comments:', allComments.length, allComments);
+            
+            const commentList = document.getElementById('commentList');
+            
+            if (!commentList) {
+                console.log('commentList element not found');
+                return;
+            }
+
+            if (allComments.length === 0) {
+                console.log('No comments found for meme:', currentMemeId);
+                commentList.innerHTML = '<p class="no-comments">Belum ada komentar</p>';
+                return;
+            }
+
+            // Display all comments, but container height will limit visible ones to 3-4
+            commentList.innerHTML = allComments.map(comment => {
+                // Get user profile picture
+                let profilePicture = 'assets/default-pfp.png';
+                if (comment.userId) {
+                    const user = userRepository.findById(comment.userId);
+                    if (user && user.profilePicture) {
+                        profilePicture = user.profilePicture;
+                    }
+                }
+                
+                return `
+                <div class="comment-item-modal">
+                    <img src="${profilePicture}" alt="User" class="comment-item-avatar" onerror="this.src='assets/default-pfp.png'">
+                    <div class="comment-item-content">
+                        <span class="comment-item-username">@${comment.username}</span>
+                        <p class="comment-item-text">${comment.text}</p>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function submitComment() {
+            if (!currentMemeId) return;
+
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'member' && currentUser.role !== 'moderator')) {
+                alert('Hanya member dan moderator yang dapat memberikan komentar');
+                return;
+            }
+
+            // Check if comments are disabled
+            const meme = memeRepository.findById(currentMemeId);
+            if (meme && meme.statusComments === 'disabled') {
+                alert('Komentar pada meme ini telah dinonaktifkan oleh admin');
+                return;
+            }
+
+            const commentInput = document.getElementById('commentInput');
+            if (!commentInput || commentInput.disabled) return;
+
+            const commentText = commentInput.value.trim();
+
+            if (!commentText) {
+                alert('Komentar tidak boleh kosong');
+                return;
+            }
+
+            try {
+                memeService.addComment(currentMemeId, commentText);
+                commentInput.value = '';
+                loadComments();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Update navigation based on user role
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = authService.getCurrentUser();
+            const navUserName = document.getElementById('navUserName');
+            const navUserMenu = document.getElementById('navUserMenu');
+            const navLoginLink = document.getElementById('navLoginLink');
+            const arenaMenu = document.getElementById('arenaMenu');
+            const memberMenu = document.getElementById('memberMenu');
+            const memberMenu3 = document.getElementById('memberMenu3');
+            const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+            const navUserTitle = document.getElementById('navUserTitle');
+
+            if (currentUser) {
+                if (navUserName) navUserName.textContent = currentUser.username;
+                if (navUserMenu) navUserMenu.style.display = 'block';
+                if (navLoginLink) navLoginLink.style.display = 'none';
+                if (arenaMenu) arenaMenu.style.display = 'block';
+                if (memberMenu) memberMenu.style.display = 'block';
+                if (memberMenu3) memberMenu3.style.display = 'block';
+                if (currentUser.role === 'moderator') {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                    if (navUserTitle) navUserTitle.style.display = 'block';
+                } else {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                    if (navUserTitle) navUserTitle.style.display = 'none';
+                }
+            } else {
+                if (navUserName) navUserName.textContent = 'Guest';
+                if (navUserTitle) navUserTitle.style.display = 'none';
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                if (navUserMenu) navUserMenu.style.display = 'none';
+                if (navLoginLink) navLoginLink.style.display = 'block';
+                if (arenaMenu) arenaMenu.style.display = 'none';
+                if (memberMenu) memberMenu.style.display = 'none';
+                if (memberMenu3) memberMenu3.style.display = 'none';
+            }
+
+            // Load meme details
+            loadMemeDetails();
+
+            // Allow Enter key to submit comment
+            const commentInput = document.getElementById('commentInput');
+            if (commentInput) {
+                commentInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        submitComment();
+                    }
+                });
+            }
+
+            // Ensure dummy comments are created if needed
+            setTimeout(() => {
+                const memeId = getMemeIdFromURL();
+                if (memeId) {
+                    const allComments = database.getAll('comments');
+                    const memeComments = allComments.filter(c => c.memeId === memeId);
+                    console.log('=== DEBUG COMMENT LOADING ===');
+                    console.log('Meme ID:', memeId);
+                    console.log('Total comments in DB:', allComments.length);
+                    console.log('Comments for this meme:', memeComments.length);
+                    
+                    if (memeComments.length === 0 && allComments.length === 0) {
+                        console.log('No comments found at all. Creating dummy comments...');
+                        const created = ensureDummyComments();
+                        if (created > 0) {
+                            console.log('Dummy comments created, reloading...');
+                            setTimeout(() => {
+                                loadComments();
+                            }, 200);
+                        } else {
+                            console.warn('Failed to create dummy comments. Try clearing localStorage or refresh the page.');
+                        }
+                    } else if (memeComments.length === 0 && allComments.length > 0) {
+                        console.log('Comments exist but not for this meme. Reloading comments...');
+                        loadComments();
+                    }
+                }
+            }, 500);
+        });
+    </script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+</html>
+

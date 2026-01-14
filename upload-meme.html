@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Meme - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/upload.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html" class="active">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png" alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+
+        <div class="container">
+            <div class="upload-heading">
+                <h1>Upload Your MEME!</h1>
+                <span class="flame-icon"><img src="assets/flame.png" alt="Flame" class="flame-icon-image"></span>
+            </div>
+
+            <div class="upload-form-container">
+                <form id="uploadForm" class="upload-form">
+                    <!-- Left Section: Meme Upload -->
+                    <div class="upload-form-left">
+                        <h3 class="form-section-title">Meme</h3>
+                        <div class="image-upload-box" id="imageUploadBox">
+                            <input type="file" id="memeImage" accept="image/*" style="display: none;" required>
+                            <div id="imagePreview" class="image-preview">
+                                <button type="button" class="btn-upload-image" onclick="document.getElementById('memeImage').click()">
+                                    Upload image here
+                                </button>
+                            </div>
+                        </div>
+                        <div class="error-message" id="imageError"></div>
+                    </div>
+
+                    <!-- Right Section: Meme Details -->
+                    <div class="upload-form-right">
+                        <div class="form-group-upload">
+                            <h3 class="form-section-title">Post's Title</h3>
+                            <input 
+                                type="text" 
+                                id="memeTitle" 
+                                class="form-input-upload" 
+                                placeholder="Write your post's title..."
+                                required
+                            >
+                            <div class="error-message" id="titleError"></div>
+                        </div>
+
+                        <div class="form-group-upload">
+                            <h3 class="form-section-title">Category</h3>
+                            <div class="custom-dropdown" id="categoryDropdown">
+                                <div class="custom-dropdown-selected" id="categorySelected">
+                                    <span class="selected-text">Choose your meme category</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </div>
+                                <div class="custom-dropdown-options" id="categoryOptions">
+                                    <label class="dropdown-option">
+                                        <input type="checkbox" name="category" value="Funny" class="category-checkbox">
+                                        <span>Funny</span>
+                                    </label>
+                                    <label class="dropdown-option">
+                                        <input type="checkbox" name="category" value="Relatable" class="category-checkbox">
+                                        <span>Relatable</span>
+                                    </label>
+                                    <label class="dropdown-option">
+                                        <input type="checkbox" name="category" value="Dark" class="category-checkbox">
+                                        <span>Dark</span>
+                                    </label>
+                                    <label class="dropdown-option">
+                                        <input type="checkbox" name="category" value="Wholesome" class="category-checkbox">
+                                        <span>Wholesome</span>
+                                    </label>
+                                    <label class="dropdown-option">
+                                        <input type="checkbox" name="category" value="Political" class="category-checkbox">
+                                        <span>Political</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="error-message" id="categoryError"></div>
+                        </div>
+
+                        <div class="form-group-upload">
+                            <h3 class="form-section-title">Description</h3>
+                            <textarea 
+                                id="memeDescription" 
+                                class="form-textarea-upload" 
+                                rows="9"
+                                placeholder="Write your post's description..."
+                                required
+                            ></textarea>
+                            <div class="error-message" id="descriptionError"></div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="upload-form-submit">
+                        <button type="submit" class="btn-submit-meme">Submit your meme</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+            </div>
+            <p>&copy; War of Meme, 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/services/ValidationService.js"></script>
+    <script src="js/utils/FileUploader.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const memeService = new MemeService();
+
+        // Check authentication and setup
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait a bit for app.js to initialize
+            setTimeout(() => {
+                const currentUser = authService.getCurrentUser();
+                
+                // Check if user is authenticated and is member or moderator
+                if (!currentUser) {
+                    // Guest cannot access upload meme page
+                    window.location.replace('login.html');
+                    return;
+                }
+                
+                // Only member and moderator can upload memes
+                if (currentUser.role !== 'member' && currentUser.role !== 'moderator') {
+                    window.location.replace('index.html');
+                    return;
+                }
+
+                // Update navigation based on user role (after app.js)
+                const navUserName = document.getElementById('navUserName');
+                const navUserMenu = document.getElementById('navUserMenu');
+                const navLoginLink = document.getElementById('navLoginLink');
+                const arenaMenu = document.getElementById('arenaMenu');
+                const memberMenu = document.getElementById('memberMenu');
+                const memberMenu3 = document.getElementById('memberMenu3');
+                const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+                const navUserTitle = document.getElementById('navUserTitle');
+
+                if (currentUser) {
+                    if (navUserName) navUserName.textContent = currentUser.username;
+                    if (navUserMenu) navUserMenu.style.display = 'block';
+                    if (navLoginLink) navLoginLink.style.display = 'none';
+                    if (arenaMenu) arenaMenu.style.display = 'block';
+                    if (memberMenu) memberMenu.style.display = 'block';
+                    if (memberMenu3) memberMenu3.style.display = 'block';
+                    if (currentUser.role === 'moderator') {
+                        if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                        if (navUserTitle) navUserTitle.style.display = 'block';
+                    } else {
+                        if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                        if (navUserTitle) navUserTitle.style.display = 'none';
+                    }
+                } else {
+                    if (navUserName) navUserName.textContent = 'Guest';
+                    if (navUserTitle) navUserTitle.style.display = 'none';
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                }
+
+            // Custom dropdown handler
+            function initCategoryDropdown() {
+                const categoryDropdown = document.getElementById('categoryDropdown');
+                const categorySelected = document.getElementById('categorySelected');
+                const categoryOptions = document.getElementById('categoryOptions');
+                
+                if (!categoryDropdown || !categorySelected) {
+                    console.error('Category dropdown elements not found');
+                    return;
+                }
+
+                // Toggle dropdown
+                categorySelected.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    categoryDropdown.classList.toggle('active');
+                });
+
+                // Prevent closing when clicking inside dropdown options
+                categoryOptions.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (categoryDropdown && !categoryDropdown.contains(e.target)) {
+                        categoryDropdown.classList.remove('active');
+                    }
+                });
+
+                // Update selected text when checkbox changes
+                const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+                categoryCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        updateSelectedCategories();
+                    });
+                });
+
+                function updateSelectedCategories() {
+                    const selected = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+                        .map(cb => cb.nextElementSibling.textContent);
+                    
+                    const selectedText = categorySelected.querySelector('.selected-text');
+                    if (selectedText) {
+                        if (selected.length === 0) {
+                            selectedText.textContent = 'Choose your meme category';
+                        } else {
+                            selectedText.textContent = selected.join(', ');
+                        }
+                    }
+                }
+            }
+
+            // Initialize dropdown
+            initCategoryDropdown();
+
+            // Image upload handler
+            document.getElementById('memeImage').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const preview = document.getElementById('imagePreview');
+                const uploadBox = document.getElementById('imageUploadBox');
+                
+                if (file) {
+                    const validation = FileUploader.validateImage(file);
+                    if (!validation.isValid) {
+                        document.getElementById('imageError').textContent = validation.errors.join(', ');
+                        document.getElementById('imageError').classList.add('show');
+                        return;
+                    }
+                    
+                    document.getElementById('imageError').classList.remove('show');
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        preview.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview" class="uploaded-image">
+                            <button type="button" class="btn-change-image" onclick="document.getElementById('memeImage').click()">
+                                Change image
+                            </button>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Form submission
+            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear previous errors
+            ['titleError', 'categoryError', 'descriptionError', 'imageError'].forEach(id => {
+                const errorEl = document.getElementById(id);
+                if (errorEl) {
+                    errorEl.textContent = '';
+                    errorEl.classList.remove('show');
+                }
+            });
+
+            const title = document.getElementById('memeTitle').value.trim();
+            const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+            const categories = Array.from(categoryCheckboxes).map(cb => cb.value);
+            const category = categories.length > 0 ? categories[0] : ''; // Use first category for backward compatibility
+            const description = document.getElementById('memeDescription').value.trim();
+            const imageFile = document.getElementById('memeImage').files[0];
+
+            // Validation
+            let hasError = false;
+
+            // Validate title
+            if (!title || title.trim().length < 3) {
+                document.getElementById('titleError').textContent = 'Judul minimal 3 karakter';
+                document.getElementById('titleError').classList.add('show');
+                hasError = true;
+            }
+
+            // Validate category
+            if (categories.length === 0) {
+                document.getElementById('categoryError').textContent = 'Minimal satu kategori harus dipilih';
+                document.getElementById('categoryError').classList.add('show');
+                hasError = true;
+            }
+
+            // Validate description
+            if (!description || description.trim().length < 10) {
+                document.getElementById('descriptionError').textContent = 'Deskripsi minimal 10 karakter';
+                document.getElementById('descriptionError').classList.add('show');
+                hasError = true;
+            }
+
+            // Validate image
+            if (!imageFile) {
+                document.getElementById('imageError').textContent = 'Gambar harus diunggah';
+                document.getElementById('imageError').classList.add('show');
+                hasError = true;
+            } else {
+                const imageValidation = FileUploader.validateImage(imageFile);
+                if (!imageValidation.isValid) {
+                    document.getElementById('imageError').textContent = imageValidation.errors.join(', ');
+                    document.getElementById('imageError').classList.add('show');
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return;
+
+            try {
+                const imageUrl = await FileUploader.uploadImage(imageFile);
+                memeService.createMeme({ title, category, description, imageUrl });
+                
+                // Redirect to memes page on success
+                window.location.href = 'memes.html';
+            } catch (error) {
+                let errorMessage = error.message || 'An error occurred when uploading the meme';
+                
+                // Handle quota exceeded error specifically
+                if (error.message && (error.message.includes('quota') || error.message.includes('QuotaExceededError'))) {
+                    errorMessage = 'Full Storage! Please delete some old memes or use smaller images. To clear storage, open Developer Tools (F12) > Application > Local Storage > Clear All.';
+                }
+                
+                document.getElementById('imageError').textContent = errorMessage;
+                document.getElementById('imageError').classList.add('show');
+            }
+            });
+            }, 100); // Wait 100ms for app.js to initialize
+        });
+    </script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+</html>
+

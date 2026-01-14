@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/arena.css">
+    <link rel="stylesheet" href="css/comment.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html" class="active">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png"
+                            alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Arena Hero Section -->
+    <section class="arena-section">
+
+        <div class="container">
+            <div class="arena-hero">
+                <h2 class="arena-welcome" id="arenaWelcome">Hi, Guest!</h2>
+                <h1 class="arena-title">WELCOME TO MEME VOTING ARENA</h1>
+                <button class="btn-join-battle" onclick="window.location.href='upload-meme.html'">JOIN THE
+                    BATTLE</button>
+            </div>
+
+            <!-- Trending Memes Section -->
+            <div class="trending-memes-section">
+                <div class="trending-header">
+                    <h2 class="trending-title">Trending Memes</h2>
+                    <div class="trending-categories" id="trendingCategories">
+                        <!-- Categories will be dynamically updated based on filter -->
+                    </div>
+                    <button class="btn-filter-trending" onclick="toggleFilter()">
+                        <img src="assets/filter.png" alt="Filter" class="filter-icon-image">
+                        Filter
+                    </button>
+                </div>
+                <div class="trending-memes-grid">
+                    <!-- Trending memes will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Filter Modal -->
+            <div id="filterModal" class="filter-modal" style="display: none;">
+                <div class="filter-content">
+                    <button class="filter-back-btn" onclick="closeFilter()">
+                        <img src="assets/back-black.png" alt="Close" class="close-icon">
+                    </button>
+                    <h3 class="filter-title">Filter</h3>
+
+                    <!-- Sort By Categories -->
+                    <div class="filter-section" id="categoriesSection">
+                        <h4 class="filter-section-title">SORT BY CATEGORIES</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Funny"
+                                    onchange="updateFilterSection('categoriesSection')">
+                                <span>Funny</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Relatable"
+                                    onchange="updateFilterSection('categoriesSection')">
+                                <span>Relatable</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Dark"
+                                    onchange="updateFilterSection('categoriesSection')">
+                                <span>Dark</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Wholesome"
+                                    onchange="updateFilterSection('categoriesSection')">
+                                <span>Wholesome</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Political"
+                                    onchange="updateFilterSection('categoriesSection')">
+                                <span>Political</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Sort By Top -->
+                    <div class="filter-section" id="topSection">
+                        <h4 class="filter-section-title">SORT BY TOP</h4>
+                        <div class="filter-options">
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="vote"
+                                    onchange="updateFilterSection('topSection')">
+                                <span>Vote</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="downvote"
+                                    onchange="updateFilterSection('topSection')">
+                                <span>Down Vote</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="likedUploaders"
+                                    onchange="updateFilterSection('topSection')">
+                                <span>Liked Uploaders</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="activeUploaders"
+                                    onchange="updateFilterSection('topSection')">
+                                <span>Active Uploaders</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn-filter-reset" onclick="resetTrendingFilter()">Reset</button>
+                        <button class="btn-filter-apply" onclick="applyTrendingFilter()">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+            </div>
+            <p>&copy; War of Meme, 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Arena.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/ArenaRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const memeRepository = new MemeRepository();
+        const memeService = new MemeService();
+        const userRepository = new UserRepository();
+
+        // Filter state
+        let trendingFilter = {
+            categories: [], // Empty array means all categories
+            timeRange: 'all', // 'week', 'month', '6months', '12months', 'all'
+            sortBy: 'vote' // 'vote', 'downvote', 'likedUploaders', 'activeUploaders'
+        };
+
+        function loadArenaContent() {
+            const currentUser = authService.getCurrentUser();
+
+            // Update welcome message
+            const welcomeElement = document.getElementById('arenaWelcome');
+            if (currentUser) {
+                if (welcomeElement) welcomeElement.textContent = `Hi, ${currentUser.username}!`;
+            } else {
+                if (welcomeElement) welcomeElement.textContent = 'Hi, Guest!';
+            }
+
+            // Load trending memes (excluding top 10 from leaderboard)
+            loadTrendingMemes();
+            updateTrendingCategories();
+        }
+
+        function loadTrendingMemes() {
+            // Get all memes
+            let allMemes = memeRepository.findAll();
+
+            // Ensure meme
+            const memeImageUrls = allMemes.map(m => m.imageUrl);
+            const requiredMemes = [];
+            for (let i = 1; i <= 10; i++) {
+                const imageUrl = `assets/meme${i}.jpg`;
+                if (!memeImageUrls.includes(imageUrl)) {
+                    // Create dummy meme for missing image
+                    const dummyMeme = {
+                        userId: 'user' + i,
+                        username: getDummyUsername(i),
+                        title: getDummyTitle(i),
+                        category: getDummyCategory(i),
+                        description: getDummyDescription(i),
+                        imageUrl: imageUrl,
+                        voteCount: getDummyVoteCount(i),
+                        commentCount: getDummyCommentCount(i),
+                        statusComments: 'enabled',
+                        createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
+                        arenaId: null
+                    };
+                    memeRepository.create(dummyMeme);
+                    requiredMemes.push(dummyMeme);
+                }
+            }
+
+            // Reload all memes after creating missing ones
+            if (requiredMemes.length > 0) {
+                allMemes = memeRepository.findAll();
+            }
+
+            // Apply category filter
+            if (trendingFilter.categories.length > 0) {
+                allMemes = allMemes.filter(m => trendingFilter.categories.includes(m.category));
+            }
+
+            // Apply time range filter
+            if (trendingFilter.timeRange && trendingFilter.timeRange !== 'all') {
+                const now = new Date();
+                const timeRanges = {
+                    'week': 7,
+                    'month': 30,
+                    '6months': 180,
+                    '12months': 365
+                };
+                const days = timeRanges[trendingFilter.timeRange] || Infinity;
+                if (days !== Infinity) {
+                    const cutoffDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+                    allMemes = allMemes.filter(m => new Date(m.createdAt) >= cutoffDate);
+                }
+            }
+
+            // Get all memes with meme1.jpg to meme10.jpg FIRST
+            const memeNumberMemes = allMemes.filter(m => {
+                const match = m.imageUrl.match(/meme(\d+)\.jpg/);
+                return match && parseInt(match[1]) >= 1 && parseInt(match[1]) <= 10;
+            });
+
+            // Always show meme1-10 in trending, regardless of leaderboard
+            // This ensures they are always visible
+            let trendingMemeNumbers = [...memeNumberMemes];
+
+            // Get top 10 from leaderboard (to exclude from other memes)
+            const leaderboardMemes = [...allMemes]
+                .sort((a, b) => b.voteCount - a.voteCount)
+                .slice(0, 10);
+            const leaderboardIds = new Set(leaderboardMemes.map(m => m.id));
+
+            // Get other memes (not meme1-10) that are not in leaderboard
+            const otherMemes = allMemes.filter(m => {
+                const match = m.imageUrl.match(/meme(\d+)\.jpg/);
+                const isMemeNumber = match && parseInt(match[1]) >= 1 && parseInt(match[1]) <= 10;
+                return !isMemeNumber && !leaderboardIds.has(m.id);
+            });
+
+            // Sort based on sortBy filter
+            const sortMemes = (memes) => {
+                switch (trendingFilter.sortBy) {
+                    case 'downvote':
+                        return memes.sort((a, b) => (b.downvoteCount || 0) - (a.downvoteCount || 0));
+                    case 'likedUploaders':
+                        return memes.sort((a, b) => b.voteCount - a.voteCount);
+                    case 'activeUploaders':
+                        return memes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    case 'vote':
+                    default:
+                        return memes.sort((a, b) => b.voteCount - a.voteCount);
+                }
+            };
+
+            // Sort meme number memes: prioritize by meme number (1-10), then by sortBy filter
+            trendingMemeNumbers.sort((a, b) => {
+                const matchA = a.imageUrl.match(/meme(\d+)\.jpg/);
+                const matchB = b.imageUrl.match(/meme(\d+)\.jpg/);
+                const numA = matchA ? parseInt(matchA[1]) : 999;
+                const numB = matchB ? parseInt(matchB[1]) : 999;
+
+                // Sort by number first (1-10)
+                if (numA !== numB) {
+                    return numA - numB;
+                }
+
+                // Then by sortBy filter
+                return sortByComparison(a, b);
+            });
+
+            // Sort other memes by sortBy filter
+            sortMemes(otherMemes);
+
+            // Combine: meme number memes first (meme1-10), then others
+            trendingMemes = [...trendingMemeNumbers, ...otherMemes];
+
+            // Get top 12 trending memes (prioritizing meme1-10)
+            // But ensure we show at least meme1-10 if available
+            if (trendingMemeNumbers.length > 0) {
+                // Show all meme1-10 first, then fill with others up to 12
+                const remainingSlots = Math.max(0, 12 - trendingMemeNumbers.length);
+                trendingMemes = [...trendingMemeNumbers, ...otherMemes.slice(0, remainingSlots)];
+            } else {
+                trendingMemes = trendingMemes.slice(0, 12);
+            }
+
+            console.log('Trending memes found:', trendingMemes.length);
+            console.log('Meme number memes:', trendingMemeNumbers.length);
+            console.log('Other memes:', otherMemes.length);
+            console.log('All memes count:', allMemes.length);
+
+            displayTrendingMemes(trendingMemes);
+        }
+
+        function sortByComparison(a, b) {
+            switch (trendingFilter.sortBy) {
+                case 'downvote':
+                    return (b.downvoteCount || 0) - (a.downvoteCount || 0);
+                case 'likedUploaders':
+                    return b.voteCount - a.voteCount;
+                case 'activeUploaders':
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                case 'vote':
+                default:
+                    return b.voteCount - a.voteCount;
+            }
+        }
+
+        function updateTrendingCategories() {
+            const categoriesContainer = document.getElementById('trendingCategories');
+            if (!categoriesContainer) return;
+
+            // Map categories to colors
+            const categoryColorMap = {
+                'Funny': '#ef4444',      // Red
+                'Relatable': '#8b5cf6',  // Purple
+                'Dark': '#2563eb',       // Blue
+                'Wholesome': '#10b981',  // Green
+                'Political': '#f59e0b'   // Orange
+            };
+
+            // If no categories selected, show all categories
+            if (trendingFilter.categories.length === 0) {
+                const allCategories = ['Funny', 'Relatable', 'Dark', 'Wholesome', 'Political'];
+                categoriesContainer.innerHTML = allCategories.map(cat => {
+                    const color = categoryColorMap[cat] || '#6b7280';
+                    return `<span class="category-tag" style="background: ${color}; color: #ffffff;">#${cat.toLowerCase()}</span>`;
+                }).join('');
+            } else {
+                // Show only selected categories
+                categoriesContainer.innerHTML = trendingFilter.categories.map(cat => {
+                    const color = categoryColorMap[cat] || '#6b7280';
+                    return `<span class="category-tag" style="background: ${color}; color: #ffffff;">#${cat.toLowerCase()}</span>`;
+                }).join('');
+            }
+        }
+
+        function toggleFilter() {
+            const filterModal = document.getElementById('filterModal');
+            if (filterModal) {
+                const currentDisplay = filterModal.style.display || window.getComputedStyle(filterModal).display;
+                if (currentDisplay === 'none' || currentDisplay === '') {
+                    filterModal.style.display = 'flex';
+                    // Setup radio button toggle saat modal dibuka
+                    setTimeout(() => {
+                        setupRadioButtonToggleArena();
+                    }, 50);
+                } else {
+                    filterModal.style.display = 'none';
+                }
+            }
+        }
+
+        function closeFilter() {
+            const filterModal = document.getElementById('filterModal');
+            if (filterModal) {
+                filterModal.style.display = 'none';
+            }
+        }
+
+        function updateFilterSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+
+            // Check if section has any selected options
+            const hasSelection = section.querySelector('input:checked') !== null;
+
+            if (hasSelection) {
+                section.classList.add('has-selection');
+            } else {
+                section.classList.remove('has-selection');
+            }
+        }
+
+        function applyTrendingFilter() {
+            // Get category filters (checkboxes)
+            const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+            const categories = Array.from(categoryCheckboxes).map(cb => cb.value);
+
+            // Get top filter (radio button)
+            const topRadio = document.querySelector('input[name="top"]:checked');
+            const topFilter = topRadio ? topRadio.value : 'vote';
+
+            // Update filter state - only categories and sortBy (no date filter in arena)
+            trendingFilter = {
+                categories: categories, // Empty array means all categories
+                timeRange: 'all', // Always 'all' for arena (no date filter)
+                sortBy: topFilter || 'vote'
+            };
+
+            // Reload trending memes with new filter
+            loadTrendingMemes();
+            updateTrendingCategories();
+            closeFilter();
+        }
+
+        function resetTrendingFilter() {
+            // Reset all filter inputs
+            const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+            categoryCheckboxes.forEach(checkbox => checkbox.checked = false);
+
+            const topRadios = document.querySelectorAll('input[name="top"]');
+            topRadios.forEach(radio => radio.checked = false);
+
+            // Reset filter state to default
+            trendingFilter = {
+                categories: [], // Empty array means all categories
+                timeRange: 'all',
+                sortBy: 'vote'
+            };
+
+            // Update filter section visual states
+            updateFilterSection('categoriesSection');
+            updateFilterSection('topSection');
+
+            // Reload trending memes with default filter
+            loadTrendingMemes();
+            updateTrendingCategories();
+            closeFilter();
+        }
+
+
+        function getDummyUsername(index) {
+            const usernames = [
+                'Cynthia Erivo', 'John Smith', 'Sarah Johnson', 'Mike Wilson',
+                'Emma Davis', 'David Brown', 'Lisa Anderson', 'Tom Miller',
+                'Amy Taylor', 'Chris Lee'
+            ];
+            return usernames[index - 1] || `User${index}`;
+        }
+
+        function getDummyTitle(index) {
+            const titles = [
+                'TungTungTung', 'Epic Moment', 'Surprised Reaction', 'Funny Face',
+                'Absolute Cinema', 'Relatable Moment', 'Dark Humor', 'Wholesome Content',
+                'Political Satire', 'Funny Reaction'
+            ];
+            return titles[index - 1] || `Meme ${index}`;
+        }
+
+        function getDummyCategory(index) {
+            const categories = ['Funny', 'Relatable', 'Dark', 'Wholesome', 'Political'];
+            return categories[(index - 1) % categories.length];
+        }
+
+        function getDummyDescription(index) {
+            const descriptions = [
+                'Description ini adalah meme yang akan digunakan sebagai dummy untuk testing trending memes.',
+                'Meme ini menggambarkan momen yang sangat relatable dengan kehidupan sehari-hari kita.',
+                'Reaksi lucu yang menggambarkan ekspresi kita dalam berbagai situasi.',
+                'Momen yang sangat menghibur dan membuat kita tertawa terbahak-bahak.',
+                'Konten yang menggambarkan realitas kehidupan dengan cara yang lucu.',
+                'Meme yang sangat relatable dan membuat kita merasa tidak sendirian.',
+                'Ekspresi yang sempurna untuk menggambarkan perasaan kita.',
+                'Konten wholesome yang membuat hati kita hangat.',
+                'Satire politik yang menghibur dan mengajak kita berpikir.',
+                'Reaksi yang sangat akurat untuk berbagai situasi dalam hidup.'
+            ];
+            return descriptions[index - 1] || 'Description ini adalah meme yang akan digunakan sebagai dummy.';
+        }
+
+        function getDummyVoteCount(index) {
+            // Random vote count between 20-150, but not too high to avoid leaderboard
+            return Math.floor(Math.random() * 130) + 20;
+        }
+
+        function getDummyCommentCount(index) {
+            // Random comment count between 5-50
+            return Math.floor(Math.random() * 45) + 5;
+        }
+
+        function displayTrendingMemes(memes) {
+            const container = document.querySelector('.trending-memes-grid');
+
+            console.log('Displaying trending memes:', memes.length);
+
+            if (!container) {
+                console.error('trending-memes-grid not found!');
+                return;
+            }
+
+            if (memes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-primary); padding: 2rem;">No trending memes available</p>';
+                return;
+            }
+
+            container.innerHTML = memes.map(meme => {
+                // Use username from meme object directly, or try to get from userRepository
+                let username = meme.username || 'username';
+                let userTitle = '';
+                let isAdmin = false;
+
+                // Try to get user info if userId exists
+                if (meme.userId) {
+                    const user = userRepository.findById(meme.userId);
+                    if (user) {
+                        username = user.username || username;
+                        userTitle = user.title || '';
+                        isAdmin = user.role === 'moderator';
+                    }
+                }
+
+                // Format username for display
+                const displayUsername = username.toLowerCase().replace(/\s+/g, '');
+
+                return `
+                    <div class="trending-meme-card clickable" onclick="window.location.href='comment.html?id=${meme.id}'">
+                        <img src="${meme.imageUrl}" alt="${meme.title}" class="trending-meme-image">
+                        <div class="trending-meme-info">
+                            <div class="trending-meme-header">
+                                <h3 class="trending-meme-title">${meme.title || 'Cynthia Erivo'}</h3>
+                                <div class="trending-meme-votes-top" onclick="event.stopPropagation()">
+                                    <button class="vote-btn vote-btn-down"><img src="assets/down-vote.png" alt="Down" class="down-icon"> 10</button>
+                                    <button class="vote-btn vote-btn-up"><img src="assets/up-vote.png" alt="Up" class="up-icon"> ${meme.voteCount || 120}</button>
+                                </div>
+                            </div>
+                            <div class="trending-meme-user">
+                                <span class="user-icon">🧙</span>
+                                <span class="user-name">@${displayUsername}</span>
+                                ${isAdmin ? '<span class="user-title-admin">Admin</span>' : (userTitle ? `<span class="user-title">${userTitle}</span>` : '<span class="user-title">Newbie</span>')}
+                            </div>
+                            <p class="trending-meme-description">${meme.description || 'Description ini adalah meme yang akan digunakan sebagai dummy'}</p>
+                            <div class="trending-meme-footer">
+                                <div class="trending-meme-categories">
+                                    ${getCategoryTags(meme.category)}
+                                </div>
+                                <div class="trending-meme-engagement">
+                                    <span class="engagement-item">
+                                        <img src="assets/comment.png" alt="Comment" class="comment-icon-img">
+                                        <span class="comment-count">${meme.commentCount || 45}</span>
+                                    </span>
+                                    <span class="engagement-item">🔗</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleTrendingFilter() {
+            // Filter functionality can be added later
+            alert('Filter functionality coming soon!');
+        }
+
+        function getCategoryTags(category) {
+            // Map categories to colors
+            const categoryColorMap = {
+                'Funny': '#ef4444',      // Red
+                'Relatable': '#8b5cf6',  // Purple
+                'Dark': '#2563eb',       // Blue
+                'Wholesome': '#10b981',  // Green
+                'Political': '#f59e0b'   // Orange
+            };
+
+            const mainCategory = category || 'kategories';
+            const mainColor = categoryColorMap[mainCategory] || '#6b7280'; // Gray as default
+
+            return `
+                <span class="category-tag-small" style="background: ${mainColor}; color: #ffffff;">#${mainCategory.toLowerCase()}</span>
+                <span class="category-tag-small" style="background: #6b7280; color: #ffffff;">#kategories</span>
+            `;
+        }
+
+        function openCommentPage(memeId) {
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'member' && currentUser.role !== 'moderator')) {
+                alert('Hanya member dan moderator yang dapat melihat komentar');
+                return;
+            }
+            window.location.href = `comment.html?id=${memeId}`;
+        }
+
+        // Update navigation based on user role
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = authService.getCurrentUser();
+            const navUserName = document.getElementById('navUserName');
+            const navUserMenu = document.getElementById('navUserMenu');
+            const navLoginLink = document.getElementById('navLoginLink');
+            const arenaMenu = document.getElementById('arenaMenu');
+            const memberMenu = document.getElementById('memberMenu');
+            const memberMenu3 = document.getElementById('memberMenu3');
+            const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+            const navUserTitle = document.getElementById('navUserTitle');
+            const logoutMenu = document.getElementById('logoutMenu');
+
+            if (currentUser) {
+                if (navUserName) navUserName.textContent = currentUser.username;
+                if (navUserMenu) navUserMenu.style.display = 'block';
+                if (navLoginLink) navLoginLink.style.display = 'none';
+                if (arenaMenu) arenaMenu.style.display = 'block';
+                if (memberMenu) memberMenu.style.display = 'block';
+                if (memberMenu3) memberMenu3.style.display = 'block';
+                if (currentUser.role === 'moderator') {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                    if (navUserTitle) navUserTitle.style.display = 'block';
+                } else {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                    if (navUserTitle) navUserTitle.style.display = 'none';
+                }
+                // Logout button is now in profile card, not in navbar
+                if (logoutMenu) logoutMenu.style.display = 'none';
+            } else {
+                if (navUserName) navUserName.textContent = 'Guest';
+                if (navUserTitle) navUserTitle.style.display = 'none';
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                if (navUserMenu) navUserMenu.style.display = 'none';
+                if (navLoginLink) navLoginLink.style.display = 'block';
+                if (arenaMenu) arenaMenu.style.display = 'none';
+                if (memberMenu) memberMenu.style.display = 'none';
+                if (memberMenu3) memberMenu3.style.display = 'none';
+            }
+
+            // Load arena content
+            loadArenaContent();
+            
+            // Setup radio button toggle functionality setelah modal ada
+            setTimeout(() => {
+                setupRadioButtonToggleArena();
+            }, 100);
+        });
+        
+        function setupRadioButtonToggleArena() {
+            // Setup untuk semua radio button di filter modal
+            const filterModal = document.getElementById('filterModal');
+            if (!filterModal) return;
+            
+            const radioButtons = filterModal.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                // Hapus listener lama jika ada dengan clone
+                const newRadio = radio.cloneNode(true);
+                radio.parentNode.replaceChild(newRadio, radio);
+                
+                // Flag untuk menandai bahwa kita sedang uncheck
+                let isUnchecking = false;
+                
+                // Tambahkan mousedown listener di capture phase untuk toggle
+                newRadio.addEventListener('mousedown', function(e) {
+                    // Jika sudah checked, uncheck langsung dan prevent semua event
+                    if (this.checked) {
+                        isUnchecking = true;
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        // Uncheck langsung
+                        this.checked = false;
+                        const sectionId = this.closest('.filter-section')?.id;
+                        if (sectionId) {
+                            updateFilterSection(sectionId);
+                        }
+                        return false;
+                    } else {
+                        isUnchecking = false;
+                    }
+                }, true); // Capture phase
+                
+                // Prevent click event jika sedang uncheck
+                newRadio.addEventListener('click', function(e) {
+                    if (isUnchecking) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        isUnchecking = false;
+                        return false;
+                    }
+                }, true); // Capture phase
+            });
+        }
+    </script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+
+</html>

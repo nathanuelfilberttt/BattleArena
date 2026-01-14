@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for converting chart to image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html" class="active">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png"
+                            alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container admin-panel-container">
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="showTab('users')">Manage Users</button>
+            <button class="admin-tab" onclick="showTab('memes')">Manage Memes</button>
+            <button class="admin-tab" onclick="showTab('achievements')">Manage Achievements</button>
+            <button class="admin-tab" onclick="showTab('reports')">Reports</button>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="usersTab" class="tab-content">
+            <div class="table-container">
+                <h2>User Management</h2>
+                <div class="filter-pagination">
+                    <div class="filter-group">
+                        <div class="search-autocomplete-wrapper">
+                            <input type="text" id="userSearch" class="admin-input" placeholder="Search username..."
+                                autocomplete="off">
+                            <div id="userSearchSuggestions" class="search-suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Total Uploads</th>
+                            <th>Total Likes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Memes Tab -->
+        <div id="memesTab" class="tab-content" style="display: none;">
+            <div class="table-container">
+                <h2>Meme Management</h2>
+                <div class="filter-pagination">
+                    <div class="filter-group filter-group-meme">
+                        <div class="meme-search-wrapper">
+                            <input type="text" id="memeSearchInput" class="admin-input" placeholder="Search by title or author..." autocomplete="off">
+                        </div>
+                        <div class="custom-dropdown-admin" id="memeCategoryFilterDropdown">
+                            <div class="custom-dropdown-selected-admin" id="memeCategorySelected">
+                                <span class="selected-text-admin">All Categories</span>
+                                <span class="dropdown-arrow-admin">▼</span>
+                            </div>
+                            <div class="custom-dropdown-options-admin" id="memeCategoryOptions">
+                                <label class="dropdown-option-admin">
+                                    <input type="checkbox" name="categoryFilter" value="Funny"
+                                        class="category-checkbox-admin">
+                                    <span>Funny</span>
+                                </label>
+                                <label class="dropdown-option-admin">
+                                    <input type="checkbox" name="categoryFilter" value="Relatable"
+                                        class="category-checkbox-admin">
+                                    <span>Relatable</span>
+                                </label>
+                                <label class="dropdown-option-admin">
+                                    <input type="checkbox" name="categoryFilter" value="Dark"
+                                        class="category-checkbox-admin">
+                                    <span>Dark</span>
+                                </label>
+                                <label class="dropdown-option-admin">
+                                    <input type="checkbox" name="categoryFilter" value="Wholesome"
+                                        class="category-checkbox-admin">
+                                    <span>Wholesome</span>
+                                </label>
+                                <label class="dropdown-option-admin">
+                                    <input type="checkbox" name="categoryFilter" value="Political"
+                                        class="category-checkbox-admin">
+                                    <span>Political</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Votes</th>
+                            <th>Comments</th>
+                            <th>Comment Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Achievements Tab -->
+        <div id="achievementsTab" class="tab-content" style="display: none;">
+            <div class="btn-admin-section">
+                <button class="btn btn-admin" onclick="showCreateAchievementForm()">+ Add Achievement</button>
+            </div>
+            <div id="achievementsAdminContainer"></div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reportsTab" class="tab-content" style="display: none;">
+            <!-- Filter Section -->
+            <div class="chart-filter-section">
+                <h3>SORT BY TOP</h3>
+                <div>
+                    <label>
+                        <input type="radio" name="reportSortBy" value="vote" checked onchange="regenerateAllCharts()">
+                        <span>Vote</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="reportSortBy" value="downvote" onchange="regenerateAllCharts()">
+                        <span>Down Vote</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="reportSortBy" value="likedUploaders" onchange="regenerateAllCharts()">
+                        <span>Liked Uploaders</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="reportSortBy" value="activeUploaders" onchange="regenerateAllCharts()">
+                        <span>Active Uploaders</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Table Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2>Table Chart - Top Uploaders</h2>
+                    <button class="btn btn-admin" onclick="generateTableChart()">Generate Table Chart</button>
+                </div>
+                <div id="tableChartContainer" class="chart-wrapper">
+                    <canvas id="tableChart"></canvas>
+                </div>
+                <button class="btn btn-admin" onclick="downloadTableChartPDF()" style="margin-top: 1rem;">Download
+                    PDF</button>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2>Pie Chart - Category Distribution</h2>
+                    <button class="btn btn-admin" onclick="generatePieChart()">Generate Pie Chart</button>
+                </div>
+                <div id="pieChartContainer" class="chart-wrapper">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <button class="btn btn-admin" onclick="downloadPieChartPDF()" style="margin-top: 1rem;">Download
+                    PDF</button>
+            </div>
+
+            <!-- Line Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2>Line Chart - Meme Uploads Over Time</h2>
+                    <button class="btn btn-admin" onclick="generateLineChart()">Generate Line Chart</button>
+                </div>
+                <div id="lineChartContainer" class="chart-wrapper">
+                    <canvas id="lineChart"></canvas>
+                </div>
+                <button class="btn btn-admin" onclick="downloadLineChartPDF()" style="margin-top: 1rem;">Download
+                    PDF</button>
+            </div>
+        </div>
+    </div>
+
+ <!-- Create Achievement Modal -->
+<div id="achievementModal" class="admin-modal">
+    <div class="form-container">
+        <h2>Add Achievement</h2>
+        <div id="achievementAlert"></div>
+
+        <form id="achievementForm">
+
+            <!-- FLEX WRAPPER: PREVIEW (LEFT) + FORM (RIGHT) -->
+            <div class="achievement-flex">
+                <!-- LEFT: PREVIEW -->
+                <div class="achievement-preview">
+                    <div class="title-box-preview" id="preview-box">
+                        <span id="preview-text">Title</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT: FORM -->
+                <div class="achievement-form">
+
+                    <div class="form-group">
+                        <label for="achievementName">Name</label>
+                        <input type="text" id="achievementName" required placeholder="Achievement name...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text-color">Text Color</label>
+                            <select id="text-color">
+                                <option value="#ffffff">White</option>
+                                <option value="#000000">Black</option>
+                            </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="box-color">Box Color</label>
+                            <select id="box-color">
+                                <option value="#000000">Black</option>
+                                <option value="#ff0000">Red</option>
+                                <option value="#00ff00">Green</option>
+                                <option value="#FF49C3">Pink</option>
+                                <option value="#49FFE8">Cyan</option>
+                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="achievementDescription">Description</label>
+                        <textarea id="achievementDescription" rows="3" required placeholder="Write the achievement description here..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="achievementIcon">Icon (emoji)</label>
+                        <input type="text" id="achievementIcon" placeholder="🏆" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirementType">Requirement Type</label>
+                        <select id="requirementType" required>
+                            <option value="">Choose Requirement Type</option>
+                            <option value="likes">Likes</option>
+                            <option value="posts">Posts</option>
+                            <option value="total_votes">Total Votes Received</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirementCount">Requirement Count</label>
+                        <input type="number" id="requirementCount" min="1" required>
+                    </div>
+
+                </div> <!-- END RIGHT COLUMN -->
+
+            </div> <!-- END FLEX -->
+
+            <!-- BUTTONS -->
+            <div class="admin-modal-buttons">
+                <button type="button" class="btn btn-secondary" onclick="hideAchievementModal()">Cancel</button>
+                <button type="submit" class="btn">Create</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+            </div>
+            <p>&copy; War of Meme, 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Arena.js"></script>
+    <script src="js/models/Achievement.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/ArenaRepository.js"></script>
+    <script src="js/repositories/AchievementRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/services/ValidationService.js"></script>
+    <script src="js/utils/ReportGenerator.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+
+        const userRepository = new UserRepository();
+        const memeRepository = new MemeRepository();
+        const arenaRepository = new ArenaRepository();
+        const achievementRepository = new AchievementRepository();
+        const memeService = new MemeService();
+
+        // Check if user is moderator
+        if (!authService.isModerator()) {
+            window.location.href = 'index.html';
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            event.target.classList.add('active');
+
+            // Load tab content
+            switch (tabName) {
+                case 'users':
+                    loadUsers();
+                    // Initialize search autocomplete after tab is shown
+                    setTimeout(() => {
+                        initUserSearch();
+                    }, 100);
+                    break;
+                case 'memes':
+                    loadMemesAdmin();
+                    // Initialize dropdown and search after tab is shown
+                    setTimeout(() => {
+                        initMemeCategoryDropdown();
+                        initMemeSearch();
+                    }, 100);
+                    break;
+                case 'arenas':
+                    loadArenas();
+                    break;
+                case 'achievements':
+                    loadAchievementsAdmin();
+                    break;
+                case 'reports':
+                    // Initialize charts when reports tab is opened
+                    setTimeout(() => {
+                        generateTableChart();
+                        generatePieChart();
+                        generateLineChart();
+                    }, 100);
+                    break;
+            }
+        }
+
+        function loadUsers() {
+            let users = userRepository.findAll();
+            const searchTerm = document.getElementById('userSearch')?.value.toLowerCase() || '';
+
+            if (searchTerm) {
+                users = users.filter(u => u.username.toLowerCase().includes(searchTerm));
+            }
+
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${user.stats.totalUploads}</td>
+                    <td>${user.stats.totalLikes}</td>
+                    <td>
+                        <button class="btn btn-danger btn-admin" onclick="showDeleteUserConfirmation('${user.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showUserSuggestions(searchTerm) {
+            const suggestionsContainer = document.getElementById('userSearchSuggestions');
+            if (!suggestionsContainer) return;
+
+            if (!searchTerm || searchTerm.length === 0) {
+                suggestionsContainer.style.display = 'none';
+                suggestionsContainer.innerHTML = '';
+                return;
+            }
+
+            const allUsers = userRepository.findAll();
+            const filteredUsers = allUsers.filter(user =>
+                user.username.toLowerCase().includes(searchTerm.toLowerCase())
+            ).slice(0, 5); // Limit to 5 suggestions
+
+            if (filteredUsers.length === 0) {
+                suggestionsContainer.style.display = 'none';
+                suggestionsContainer.innerHTML = '';
+                return;
+            }
+
+            suggestionsContainer.innerHTML = filteredUsers.map(user => `
+                <div class="suggestion-item" data-username="${user.username}">
+                    <span class="suggestion-username">${highlightMatch(user.username, searchTerm)}</span>
+                    <span class="suggestion-email">${user.email}</span>
+                </div>
+            `).join('');
+
+            suggestionsContainer.style.display = 'block';
+
+            // Add click event listeners to suggestions
+            suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const username = item.getAttribute('data-username');
+                    document.getElementById('userSearch').value = username;
+                    suggestionsContainer.style.display = 'none';
+                    loadUsers();
+                });
+            });
+        }
+
+        function highlightMatch(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<strong>$1</strong>');
+        }
+
+        let pendingDeleteUserId = null;
+
+        function showDeleteUserConfirmation(userId) {
+            pendingDeleteUserId = userId;
+            const modal = document.getElementById('deleteUserModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function confirmDeleteUser() {
+            if (pendingDeleteUserId) {
+                try {
+                    userRepository.delete(pendingDeleteUserId);
+                    loadUsers();
+                    closeDeleteUserModal();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        }
+
+        function closeDeleteUserModal() {
+            pendingDeleteUserId = null;
+            const modal = document.getElementById('deleteUserModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        function loadMemesAdmin() {
+            let memes = memeRepository.findAll();
+
+            // Get search query
+            const searchInput = document.getElementById('memeSearchInput');
+            const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+            // Filter by search query (title or author)
+            if (searchQuery) {
+                memes = memes.filter(m => {
+                    const title = (m.title || '').toLowerCase();
+                    const author = (m.username || '').toLowerCase();
+                    return title.includes(searchQuery) || author.includes(searchQuery);
+                });
+            }
+
+            // Get selected categories from checkboxes
+            const selectedCategories = getSelectedCategories();
+
+            // Filter by selected categories (if any selected)
+            if (selectedCategories.length > 0) {
+                memes = memes.filter(m => {
+                    // Check if meme's category is in selected categories
+                    // Support both single category (string) and multiple categories (array)
+                    const memeCategories = Array.isArray(m.category) ? m.category : [m.category];
+                    return memeCategories.some(cat => selectedCategories.includes(cat));
+                });
+            }
+            // If no categories selected, show all (default behavior)
+
+            const tbody = document.getElementById('memesTableBody');
+            tbody.innerHTML = memes.map(meme => `
+                <tr>
+                    <td>${meme.title}</td>
+                    <td>${Array.isArray(meme.category) ? meme.category.join(', ') : meme.category}</td>
+                    <td>${meme.username}</td>
+                    <td>${meme.voteCount}</td>
+                    <td>${meme.commentCount}</td>
+                    <td>${(meme.statusComments || (meme.commentsEnabled ? 'enabled' : 'disabled')) === 'enabled' ? 'Enabled' : 'Disabled'}</td>
+                    <td>
+                        ${(meme.statusComments || (meme.commentsEnabled ? 'enabled' : 'disabled')) === 'enabled' 
+                            ? `<button class="btn btn-warning btn-admin" onclick="disableMemeComments('${meme.id}')">Disable Comments</button>`
+                            : `<button class="btn btn-success btn-admin" onclick="enableMemeComments('${meme.id}')">Enable Comments</button>`
+                        }
+                        <button class="btn btn-danger btn-admin-inline" onclick="showDeleteMemeConfirmation('${meme.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getSelectedCategories() {
+            const checkboxes = document.querySelectorAll('.category-checkbox-admin:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function updateSelectedCategoriesText() {
+            const selected = getSelectedCategories();
+            const selectedText = document.querySelector('.selected-text-admin');
+
+            if (selected.length === 0) {
+                selectedText.textContent = 'All Categories';
+            } else if (selected.length === 1) {
+                selectedText.textContent = selected[0];
+            } else {
+                selectedText.textContent = `${selected.length} categories selected`;
+            }
+        }
+
+        function enableMemeComments(memeId) {
+            try {
+                memeService.enableComments(memeId);
+                loadMemesAdmin();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function disableMemeComments(memeId) {
+            try {
+                memeService.disableComments(memeId);
+                loadMemesAdmin();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        let pendingDeleteMemeId = null;
+
+        function showDeleteMemeConfirmation(memeId) {
+            pendingDeleteMemeId = memeId;
+            const modal = document.getElementById('deleteMemeModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function confirmDeleteMeme() {
+            if (pendingDeleteMemeId) {
+                try {
+                    memeService.deleteMeme(pendingDeleteMemeId);
+                    loadMemesAdmin();
+                    closeDeleteMemeModal();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        }
+
+        function closeDeleteMemeModal() {
+            pendingDeleteMemeId = null;
+            const modal = document.getElementById('deleteMemeModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteMemeModal = document.getElementById('deleteMemeModal');
+            if (deleteMemeModal) {
+                deleteMemeModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeDeleteMemeModal();
+                    }
+                });
+            }
+
+            const deleteAchievementModal = document.getElementById('deleteAchievementModal');
+            if (deleteAchievementModal) {
+                deleteAchievementModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeDeleteAchievementModal();
+                    }
+                });
+            }
+
+            const deleteUserModal = document.getElementById('deleteUserModal');
+            if (deleteUserModal) {
+                deleteUserModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeDeleteUserModal();
+                    }
+                });
+            }
+        });
+
+        function loadArenas() {
+            const arenas = arenaRepository.findAll();
+            const container = document.getElementById('arenasContainer');
+
+            if (arenas.length === 0) {
+                container.innerHTML = '<div class="card"><p class="admin-card-text">No arena found</p></div>';
+                return;
+            }
+            container.innerHTML = achievements.map(achievement => `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">${achievement.icon} ${achievement.name}</h3>
+                    </div>
+                    <div class="card-body" style="color: #000000 !important;">
+                        <p>${achievement.description.replace(/win/gi, 'Upload by Vote and Likes')}</p>
+                        <p class="admin-card-meta" style="color: #000000 !important;">
+                            Requirement: Upload by Vote and Likes - ${achievement.requirement.count}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-danger btn-admin" onclick="showDeleteAchievementConfirmation('${achievement.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showCreateArenaForm() {
+            document.getElementById('arenaModal').classList.add('show');
+        }
+
+        function hideArenaModal() {
+            document.getElementById('arenaModal').classList.remove('show');
+            document.getElementById('arenaForm').reset();
+            document.getElementById('arenaAlert').innerHTML = '';
+        }
+
+       // ============================================
+// ACHIEVEMENT PREVIEW - FIXED VERSION
+// ============================================
+function initAchievementPreview() {
+    console.log("Initializing achievement preview...");
+    
+    const previewText = document.getElementById("preview-text");
+    const previewBox = document.getElementById("preview-box");
+    const titleInput = document.getElementById("achievementName");
+    const textColorInput = document.getElementById("text-color");
+    const boxColorInput = document.getElementById("box-color");
+    
+    console.log("Elements found:", {
+        previewText: !!previewText,
+        previewBox: !!previewBox,
+        titleInput: !!titleInput,
+        textColorInput: !!textColorInput,
+        boxColorInput: !!boxColorInput
+    });
+    
+    // CEK: Jika elemen tidak ditemukan, coba lagi nanti
+    if (!titleInput || !previewText) {
+        console.warn("Achievement form elements not found yet. Will retry...");
+        setTimeout(initAchievementPreview, 100);
+        return;
+    }
+    
+    // Hapus event listener lama jika ada
+    const newTitleInput = titleInput.cloneNode(true);
+    titleInput.parentNode.replaceChild(newTitleInput, titleInput);
+    
+    const newTextColor = textColorInput.cloneNode(true);
+    textColorInput.parentNode.replaceChild(newTextColor, textColorInput);
+    
+    const newBoxColor = boxColorInput.cloneNode(true);
+    boxColorInput.parentNode.replaceChild(newBoxColor, boxColorInput);
+    
+    // Update Title Text
+    newTitleInput.addEventListener("input", () => {
+        document.getElementById("preview-text").textContent = newTitleInput.value || "Title";
+    });
+    
+    // Update Text Color
+    newTextColor.addEventListener("change", () => {
+        document.getElementById("preview-text").style.color = newTextColor.value;
+    });
+    
+    // Update Box Background Color
+    newBoxColor.addEventListener("change", () => {
+        document.getElementById("preview-box").style.backgroundColor = newBoxColor.value;
+    });
+    
+    console.log("Achievement preview initialized successfully!");
+}
+
+// Panggil saat modal achievement dibuka
+function showCreateAchievementForm() {
+    console.log("Opening achievement form...");
+    document.getElementById('achievementModal').classList.add('show');
+    
+    // Tunggu modal render, baru init preview
+    setTimeout(initAchievementPreview, 50);
+}
+
+// Juga panggil saat halaman pertama load (untuk modal yang sudah terbuka)
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM loaded, checking for achievement modal...");
+    
+    // Jika modal sudah terbuka (misal dari sebelumnya), init sekarang
+    const modal = document.getElementById('achievementModal');
+    if (modal && modal.classList.contains('show')) {
+        setTimeout(initAchievementPreview, 100);
+    }
+    
+    // Juga coba init setelah 1 detik (safety net)
+    setTimeout(() => {
+        const titleInput = document.getElementById("achievementName");
+        if (titleInput) {
+            console.log("Achievement form exists, initializing...");
+            initAchievementPreview();
+        }
+    }, 1000);
+});
+
+        function deleteArena(arenaId) {
+            if (!confirm('Are you sure you want to delete this arena?')) return;
+            arenaRepository.delete(arenaId);
+            loadArenas();
+        }
+
+        function loadAchievementsAdmin() {
+            const achievements = achievementRepository.findAll();
+            const container = document.getElementById('achievementsAdminContainer');
+
+            if (achievements.length === 0) {
+                container.innerHTML = '<div class="card"><p class="admin-card-text">No achievement found</p></div>';
+                return;
+            }
+
+        container.innerHTML = achievements.map(achievement => `
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">${achievement.icon} ${achievement.name}</h3>
+                </div>
+                <div class="card-body" style="color: #000000 !important;">
+                    <p>${achievement.description.replace(/win/gi, 'Upload')}</p>
+                    <p class="admin-card-meta" style="color: #000000 !important;">
+                        Requirement: Upload by Vote and Likes - ${achievement.requirement.count}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger btn-admin" onclick="showDeleteAchievementConfirmation('${achievement.id}')">Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        function getRequirementDisplayText(type) {
+            if (type === 'win' || type === 'likes' || type === 'upload') {
+                return 'Upload by Vote and Likes';
+            } else if (type === 'posts') {
+                return 'Total Posts';
+            } else if (type === 'total_votes') {
+                return 'Total Votes Received';
+            } else {
+                return type; 
+            }
+        }
+     }
+        
+
+        function showCreateAchievementForm() {
+            document.getElementById('achievementModal').classList.add('show');
+        }
+
+        function hideAchievementModal() {
+            document.getElementById('achievementModal').classList.remove('show');
+            document.getElementById('achievementForm').reset();
+            document.getElementById('achievementAlert').innerHTML = '';
+        }
+
+        document.getElementById('achievementForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const alertContainer = document.getElementById('achievementAlert');
+
+            const name = document.getElementById('achievementName').value.trim();
+            const description = document.getElementById('achievementDescription').value.trim();
+            const icon = document.getElementById('achievementIcon').value.trim();
+            const requirementType = document.getElementById('requirementType').value;
+            const requirementCount = parseInt(document.getElementById('requirementCount').value);
+
+            const validation = validationService.validateAchievement({
+                name,
+                description,
+                requirement: { type: requirementType, count: requirementCount }
+            });
+            if (!validation.isValid) {
+                alertContainer.innerHTML = `<div class="alert alert-error">${validation.errors.join(', ')}</div>`;
+                return;
+            }
+
+            try {
+                achievementRepository.create({
+                    name,
+                    description,
+                    icon: icon || '🏆',
+                    requirement: { type: requirementType, count: requirementCount }
+                });
+                alertContainer.innerHTML = '<div class="alert alert-success">Achievement successfully added!</div>';
+                setTimeout(() => {
+                    hideAchievementModal();
+                    loadAchievementsAdmin();
+                }, 1000);
+            } catch (error) {
+                alertContainer.innerHTML = `<div class="alert alert-error">${error.message}</div>`;
+            }
+        });
+
+
+        let pendingDeleteAchievementId = null;
+
+        function showDeleteAchievementConfirmation(achievementId) {
+            pendingDeleteAchievementId = achievementId;
+            const modal = document.getElementById('deleteAchievementModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function confirmDeleteAchievement() {
+            if (pendingDeleteAchievementId) {
+                try {
+                    achievementRepository.delete(pendingDeleteAchievementId);
+                    loadAchievementsAdmin();
+                    closeDeleteAchievementModal();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        }
+
+        function closeDeleteAchievementModal() {
+            pendingDeleteAchievementId = null;
+            const modal = document.getElementById('deleteAchievementModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Chart instances
+        let tableChartInstance = null;
+        let pieChartInstance = null;
+        let lineChartInstance = null;
+
+        // Get selected sort by filter
+        function getReportSortBy() {
+            const selected = document.querySelector('input[name="reportSortBy"]:checked');
+            return selected ? selected.value : 'vote';
+        }
+
+        // Regenerate all charts when filter changes
+        function regenerateAllCharts() {
+            generateTableChart();
+            generatePieChart();
+            generateLineChart();
+        }
+
+        // Table Chart - Top Uploaders
+        function generateTableChart() {
+            const sortBy = getReportSortBy();
+            const users = userRepository.findAll();
+            let sortedUsers = [...users];
+
+            // Sort users based on filter
+            switch (sortBy) {
+                case 'vote':
+                case 'likedUploaders':
+                    // Sort by total likes (votes)
+                    sortedUsers.sort((a, b) => (b.stats?.totalLikes || 0) - (a.stats?.totalLikes || 0));
+                    break;
+                case 'downvote':
+                    // For downvote, we need to calculate from memes
+                    const memes = memeRepository.findAll();
+                    const userDownvotes = {};
+                    memes.forEach(meme => {
+                        if (!userDownvotes[meme.userId]) {
+                            userDownvotes[meme.userId] = 0;
+                        }
+                        // Calculate downvotes (total votes - upvotes, or use a different metric)
+                        // Since we don't have downvote count, we'll use inverse of likes
+                        userDownvotes[meme.userId] += (meme.voteCount || 0);
+                    });
+                    sortedUsers = sortedUsers.map(user => ({
+                        ...user,
+                        downvoteScore: userDownvotes[user.id] || 0
+                    })).sort((a, b) => a.downvoteScore - b.downvoteScore);
+                    break;
+                case 'activeUploaders':
+                    // Sort by most recent upload (need to check memes)
+                    const userMemes = memeRepository.findAll();
+                    const userLastUpload = {};
+                    userMemes.forEach(meme => {
+                        if (!userLastUpload[meme.userId] || new Date(meme.createdAt) > new Date(userLastUpload[meme.userId])) {
+                            userLastUpload[meme.userId] = meme.createdAt;
+                        }
+                    });
+                    sortedUsers = sortedUsers.map(user => ({
+                        ...user,
+                        lastUpload: userLastUpload[user.id] || '1970-01-01'
+                    })).sort((a, b) => new Date(b.lastUpload) - new Date(a.lastUpload));
+                    break;
+                default:
+                    // Default: sort by total uploads
+                    sortedUsers.sort((a, b) => (b.stats?.totalUploads || 0) - (a.stats?.totalUploads || 0));
+            }
+
+            sortedUsers = sortedUsers.slice(0, 10);
+
+            const ctx = document.getElementById('tableChart');
+            if (!ctx) return;
+
+            // Destroy existing chart if any
+            if (tableChartInstance) {
+                tableChartInstance.destroy();
+            }
+
+            const labels = sortedUsers.map(u => u.username);
+            const uploads = sortedUsers.map(u => u.stats.totalUploads);
+            const likes = sortedUsers.map(u => u.stats.totalLikes);
+
+            tableChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Uploads',
+                            data: uploads,
+                            backgroundColor: 'rgba(255, 0, 110, 0.8)',
+                            borderColor: 'rgba(255, 0, 110, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Total Likes',
+                            data: likes,
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Top 10 Uploaders Statistics',
+                            font: {
+                                size: 18,
+                                family: 'League Spartan',
+                                weight: 'bold'
+                            },
+                            color: '#1a1a1a'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Pie Chart - Category Distribution
+        function generatePieChart() {
+            const sortBy = getReportSortBy();
+            let memes = memeRepository.findAll();
+
+            // Filter and sort memes based on sortBy
+            switch (sortBy) {
+                case 'vote':
+                    // Sort by vote count (top voted memes)
+                    memes = memes.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+                    break;
+                case 'downvote':
+                    // Sort by lowest vote count (most downvoted)
+                    memes = memes.sort((a, b) => (a.voteCount || 0) - (b.voteCount || 0));
+                    break;
+                case 'likedUploaders':
+                    // Sort by vote count (top liked)
+                    memes = memes.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+                    break;
+                case 'activeUploaders':
+                    // Sort by most recent
+                    memes = memes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+            }
+
+            // Get top memes based on filter (top 50 for category distribution)
+            const topMemes = memes.slice(0, 50);
+            const categoryCount = {};
+
+            topMemes.forEach(meme => {
+                const categories = Array.isArray(meme.category) ? meme.category : [meme.category];
+                categories.forEach(cat => {
+                    categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+                });
+            });
+
+            const ctx = document.getElementById('pieChart');
+            if (!ctx) return;
+
+            if (pieChartInstance) {
+                pieChartInstance.destroy();
+            }
+
+            const labels = Object.keys(categoryCount);
+            const data = Object.values(categoryCount);
+            const colors = [
+                'rgba(255, 0, 110, 0.8)',
+                'rgba(99, 102, 241, 0.8)',
+                'rgba(139, 92, 246, 0.8)',
+                'rgba(16, 185, 129, 0.8)',
+                'rgba(245, 158, 11, 0.8)',
+                'rgba(239, 68, 68, 0.8)'
+            ];
+
+            pieChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Meme Category Distribution',
+                            font: {
+                                size: 18,
+                                family: 'League Spartan',
+                                weight: 'bold'
+                            },
+                            color: '#1a1a1a'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'League Spartan'
+                                },
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Line Chart - Meme Uploads Over Time
+        function generateLineChart() {
+            const sortBy = getReportSortBy();
+            let memes = memeRepository.findAll();
+
+            // Filter and sort memes based on sortBy
+            switch (sortBy) {
+                case 'vote':
+                    // Sort by vote count (top voted memes)
+                    memes = memes.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+                    break;
+                case 'downvote':
+                    // Sort by lowest vote count (most downvoted)
+                    memes = memes.sort((a, b) => (a.voteCount || 0) - (b.voteCount || 0));
+                    break;
+                case 'likedUploaders':
+                    // Sort by vote count (top liked)
+                    memes = memes.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+                    break;
+                case 'activeUploaders':
+                    // Sort by most recent (already sorted by date)
+                    memes = memes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+            }
+
+            // Get top memes based on filter for timeline
+            const topMemes = memes.slice(0, 100);
+            const dateCount = {};
+
+            topMemes.forEach(meme => {
+                const date = new Date(meme.createdAt);
+                const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
+                dateCount[monthYear] = (dateCount[monthYear] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('lineChart');
+            if (!ctx) return;
+
+            if (lineChartInstance) {
+                lineChartInstance.destroy();
+            }
+
+            const sortedDates = Object.keys(dateCount).sort((a, b) => {
+                const [monthA, yearA] = a.split('/').map(Number);
+                const [monthB, yearB] = b.split('/').map(Number);
+                if (yearA !== yearB) return yearA - yearB;
+                return monthA - monthB;
+            });
+
+            const labels = sortedDates;
+            const data = sortedDates.map(date => dateCount[date]);
+
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Meme Uploads',
+                        data: data,
+                        borderColor: 'rgba(255, 0, 110, 1)',
+                        backgroundColor: 'rgba(255, 0, 110, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(255, 0, 110, 1)',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Meme Uploads Over Time',
+                            font: {
+                                size: 18,
+                                family: 'League Spartan',
+                                weight: 'bold'
+                            },
+                            color: '#1a1a1a'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'League Spartan'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Download PDF functions
+        async function downloadTableChartPDF() {
+            if (!tableChartInstance) {
+                alert('Please generate the chart first!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const canvas = document.getElementById('tableChart');
+            const imgData = canvas.toDataURL('image/png');
+
+            const pdf = new jsPDF('landscape', 'mm', 'a4');
+            const imgWidth = 280;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.text('Top 10 Uploaders Statistics', 10, 15);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            pdf.text(`Generated on: ${new Date().toLocaleString('id-ID')}`, 10, 22);
+
+            pdf.addImage(imgData, 'PNG', 10, 30, imgWidth, imgHeight);
+            pdf.save('table-chart-top-uploaders.pdf');
+        }
+
+        async function downloadPieChartPDF() {
+            if (!pieChartInstance) {
+                alert('Please generate the chart first!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const canvas = document.getElementById('pieChart');
+            const imgData = canvas.toDataURL('image/png');
+
+            const pdf = new jsPDF('portrait', 'mm', 'a4');
+            const imgWidth = 190;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.text('Meme Category Distribution', 10, 15);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            pdf.text(`Generated on: ${new Date().toLocaleString('id-ID')}`, 10, 22);
+
+            pdf.addImage(imgData, 'PNG', 10, 30, imgWidth, imgHeight);
+            pdf.save('pie-chart-category-distribution.pdf');
+        }
+
+        async function downloadLineChartPDF() {
+            if (!lineChartInstance) {
+                alert('Please generate the chart first!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const canvas = document.getElementById('lineChart');
+            const imgData = canvas.toDataURL('image/png');
+
+            const pdf = new jsPDF('landscape', 'mm', 'a4');
+            const imgWidth = 280;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.text('Meme Uploads Over Time', 10, 15);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            pdf.text(`Generated on: ${new Date().toLocaleString('id-ID')}`, 10, 22);
+
+            pdf.addImage(imgData, 'PNG', 10, 30, imgWidth, imgHeight);
+            pdf.save('line-chart-uploads-over-time.pdf');
+        }
+
+        // Event listeners
+        // Initialize user search with autocomplete
+        function initUserSearch() {
+            const userSearchInput = document.getElementById('userSearch');
+            const suggestionsContainer = document.getElementById('userSearchSuggestions');
+
+            if (!userSearchInput) return;
+
+            let debounceTimer;
+
+            userSearchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value;
+
+                // Debounce untuk performa
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    showUserSuggestions(searchTerm);
+                }, 200);
+
+                // Update table immediately
+                loadUsers();
+            });
+
+            userSearchInput.addEventListener('focus', (e) => {
+                const searchTerm = e.target.value;
+                if (searchTerm) {
+                    showUserSuggestions(searchTerm);
+                }
+            });
+
+            // Close suggestions when clicking outside
+            const wrapper = userSearchInput.closest('.search-autocomplete-wrapper');
+            document.addEventListener('click', (e) => {
+                if (suggestionsContainer && wrapper && !wrapper.contains(e.target)) {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+
+            // Keyboard navigation
+            userSearchInput.addEventListener('keydown', (e) => {
+                const suggestions = suggestionsContainer.querySelectorAll('.suggestion-item');
+                const activeSuggestion = suggestionsContainer.querySelector('.suggestion-item.active');
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (activeSuggestion) {
+                        activeSuggestion.classList.remove('active');
+                        const next = activeSuggestion.nextElementSibling;
+                        if (next) {
+                            next.classList.add('active');
+                        } else {
+                            suggestions[0]?.classList.add('active');
+                        }
+                    } else {
+                        suggestions[0]?.classList.add('active');
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (activeSuggestion) {
+                        activeSuggestion.classList.remove('active');
+                        const prev = activeSuggestion.previousElementSibling;
+                        if (prev) {
+                            prev.classList.add('active');
+                        } else {
+                            suggestions[suggestions.length - 1]?.classList.add('active');
+                        }
+                    } else {
+                        suggestions[suggestions.length - 1]?.classList.add('active');
+                    }
+                } else if (e.key === 'Enter' && activeSuggestion) {
+                    e.preventDefault();
+                    const username = activeSuggestion.getAttribute('data-username');
+                    userSearchInput.value = username;
+                    suggestionsContainer.style.display = 'none';
+                    loadUsers();
+                } else if (e.key === 'Escape') {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+        }
+        // Initialize custom dropdown for meme category filter
+        function initMemeCategoryDropdown() {
+            const dropdown = document.getElementById('memeCategoryFilterDropdown');
+            const selected = document.getElementById('memeCategorySelected');
+            const options = document.getElementById('memeCategoryOptions');
+            const checkboxes = document.querySelectorAll('.category-checkbox-admin');
+
+            if (!dropdown || !selected || !options) return;
+
+            // Set initial state
+            options.style.display = 'none';
+
+            // Toggle dropdown
+            selected.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = options.style.display === 'block';
+                options.style.display = isOpen ? 'none' : 'block';
+            });
+
+            // Prevent closing when clicking inside dropdown options
+            options.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Handle checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateSelectedCategoriesText();
+                    loadMemesAdmin();
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (dropdown && !dropdown.contains(e.target)) {
+                    options.style.display = 'none';
+                }
+            });
+        }
+
+        function initMemeSearch() {
+            const searchInput = document.getElementById('memeSearchInput');
+            if (!searchInput) return;
+
+            // Search on input (real-time search)
+            searchInput.addEventListener('input', () => {
+                loadMemesAdmin();
+            });
+
+            // Also search on Enter key
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    loadMemesAdmin();
+                }
+            });
+        }
+
+        // Load initial tab
+        loadUsers();
+        // Initialize search autocomplete for initial load
+        setTimeout(() => {
+            initUserSearch();
+        }, 100);
+
+        // Update navigation based on user role
+        const currentUser = authService.getCurrentUser();
+        const navUserName = document.getElementById('navUserName');
+        const navUserMenu = document.getElementById('navUserMenu');
+        const navLoginLink = document.getElementById('navLoginLink');
+        const arenaMenu = document.getElementById('arenaMenu');
+        const memberMenu = document.getElementById('memberMenu');
+        const memberMenu3 = document.getElementById('memberMenu3');
+        const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+        const navUserTitle = document.getElementById('navUserTitle');
+        const logoutMenu = document.getElementById('logoutMenu');
+
+        if (currentUser) {
+            if (navUserName) navUserName.textContent = currentUser.username;
+            if (navUserMenu) navUserMenu.style.display = 'block';
+            if (navLoginLink) navLoginLink.style.display = 'none';
+            if (arenaMenu) arenaMenu.style.display = 'block';
+            if (memberMenu) memberMenu.style.display = 'block';
+            if (memberMenu3) memberMenu3.style.display = 'block';
+            if (currentUser.role === 'moderator') {
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                if (navUserTitle) navUserTitle.style.display = 'block';
+            } else {
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                if (navUserTitle) navUserTitle.style.display = 'none';
+            }
+            if (logoutMenu) logoutMenu.style.display = 'block';
+        } else {
+            if (navUserName) navUserName.textContent = 'Guest';
+            if (navUserTitle) navUserTitle.style.display = 'none';
+            if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+            if (navUserMenu) navUserMenu.style.display = 'none';
+            if (navLoginLink) navLoginLink.style.display = 'block';
+            if (arenaMenu) arenaMenu.style.display = 'none';
+            if (memberMenu) memberMenu.style.display = 'none';
+            if (memberMenu3) memberMenu3.style.display = 'none';
+        }
+    </script>
+    
+    <!-- Delete Meme Confirmation Modal -->
+    <div id="deleteMemeModal" class="delete-confirmation-modal">
+        <div class="delete-confirmation-content">
+            <div class="delete-confirmation-header">
+                <h3>Delete Meme</h3>
+                <button class="delete-confirmation-close" onclick="closeDeleteMemeModal()" aria-label="Close">×</button>
+            </div>
+            <div class="delete-confirmation-body">
+                <div class="delete-confirmation-icon">⚠️</div>
+                <p class="delete-confirmation-message">Are you sure you want to delete this meme? This action cannot be undone.</p>
+            </div>
+            <div class="delete-confirmation-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteMemeModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteMeme()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Achievement Confirmation Modal -->
+    <div id="deleteAchievementModal" class="delete-confirmation-modal">
+        <div class="delete-confirmation-content">
+            <div class="delete-confirmation-header">
+                <h3>Delete Achievement</h3>
+                <button class="delete-confirmation-close" onclick="closeDeleteAchievementModal()" aria-label="Close">×</button>
+            </div>
+            <div class="delete-confirmation-body">
+                <div class="delete-confirmation-icon">⚠️</div>
+                <p class="delete-confirmation-message">Are you sure you want to delete this achievement? This action cannot be undone.</p>
+            </div>
+            <div class="delete-confirmation-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteAchievementModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteAchievement()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <div id="deleteUserModal" class="delete-confirmation-modal">
+        <div class="delete-confirmation-content">
+            <div class="delete-confirmation-header">
+                <h3>Delete User</h3>
+                <button class="delete-confirmation-close" onclick="closeDeleteUserModal()" aria-label="Close">×</button>
+            </div>
+            <div class="delete-confirmation-body">
+                <div class="delete-confirmation-icon">⚠️</div>
+                <p class="delete-confirmation-message">Are you sure you want to delete this user? This action cannot be undone.</p>
+            </div>
+            <div class="delete-confirmation-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteUserModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+
+</html>

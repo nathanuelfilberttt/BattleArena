@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/achievement.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+
+<body>
+    <nav class="navbar">
+         <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html" class="active">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+             <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png"
+                            alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Achievement Notification Pop-up -->
+    <div id="achievementNotification" class="achievement-notification">
+        <div class="achievement-notification-content">
+            <div class="achievement-notification-icon">✓</div>
+            <div class="achievement-notification-text">
+                <div class="achievement-notification-title">Title Activated!</div>
+                <div class="achievement-notification-message" id="achievementNotificationMessage"></div>
+            </div>
+            <button class="achievement-notification-close" onclick="closeAchievementNotification()">×</button>
+        </div>
+    </div>
+
+    <!-- Achievement Section -->
+    <section class="achievement-section">
+        <div class="container">
+            <h1 class="profile-header-outside">Upload memes to collect SPECIAL titles!</h1>
+
+            <main class="achievement-container">
+                <div class="achievement-header">
+                    <div class="total-wins-box" id="totalWinsBox">
+                        <span>Your total uploads: <strong id="totalUploads">0</strong></span>
+                    </div>
+                </div>
+                <div class="achievements-list" id="achievementsContainer">
+                    <!-- Achievements akan dimasukkan di sini -->
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <footer class="footer">
+           <div class="container">
+            <div class="footer-links">
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <p>&copy; War of Meme, 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Achievement.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/AchievementRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+    const achievementRepository = new AchievementRepository();
+    const userRepository = new UserRepository();
+    const memeRepository = new MemeRepository();
+
+    function loadAchievements() {
+        const currentUser = authService.getCurrentUser();
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const user = userRepository.findById(currentUser.id);
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Hitung statistik user
+        const userMemes = memeRepository.findByUserId(user.id);
+        const progress = {
+            likes: user.stats.totalLikes || 0,
+            uploads: userMemes.length,
+            totalVotes: userMemes.reduce((sum, meme) => sum + (meme.voteCount || 0), 0)
+        };
+
+        // TAMPILKAN TOTAL UPLOADS
+        document.getElementById('totalUploads').textContent = progress.uploads;
+
+        // Ambil achievement dari database
+        const achievements = achievementRepository.findAll();
+        
+        if (achievements.length === 0) {
+            document.getElementById('achievementsContainer').innerHTML = `
+                <div class="achievement-item">
+                    <div class="achievement-title-box" style="background: #f8f9fa; color: #666;">
+                        🏆 No Achievements
+                    </div>
+                    <div class="achievement-description">
+                        Create achievements in Admin Panel first!
+                    </div>
+                    <button class="btn-use-title disabled" disabled>
+                        Locked
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        displayAchievements(achievements, user, progress);
+    }
+
+    function displayAchievements(achievements, user, progress) {
+        const container = document.getElementById('achievementsContainer');
+        
+        // Urutkan dari yang paling mudah (count kecil) ke sulit
+        achievements.sort((a, b) => (a.requirement.count || 0) - (b.requirement.count || 0));
+
+        container.innerHTML = achievements.map(achievement => {
+            const type = achievement.requirement?.type || 'upload';
+            const requiredCount = achievement.requirement?.count || 1;
+
+            // Cek apakah unlocked berdasarkan requirement type
+            let hasUnlocked = false;
+            let currentCount = 0;
+            
+            if (type === 'upload' || type === 'posts') {
+                currentCount = progress.uploads;
+                hasUnlocked = progress.uploads >= requiredCount;
+            } else if (type === 'likes') {
+                currentCount = progress.likes;
+                hasUnlocked = progress.likes >= requiredCount;
+            } else if (type === 'total_votes') {
+                currentCount = progress.totalVotes;
+                hasUnlocked = progress.totalVotes >= requiredCount;
+            }
+
+            const isUsing = user.title === achievement.name;
+            const titleColor = achievement.color || '#6366f1';
+            const titleTextColor = achievement.textColor || '#fff';
+            const icon = achievement.icon || '🏆';
+
+            // PROGRESS PERSENTASE
+            const progressPercent = requiredCount > 0 ? Math.min((currentCount / requiredCount) * 100, 100) : 0;
+
+            
+            let description = achievement.description || '';
+            
+            // Ganti semua kata "win" menjadi "upload"
+            if (description) {
+                description = description
+                    .replace(/win(s)?/gi, 'upload')
+                    .replace(/menang/gi, 'get likes')
+                    .replace(/kemenangan/gi, 'upload success');
+            } else {
+                // Buat deskripsi default
+                if (type === 'upload' || type === 'posts') {
+                    description = `Upload ${requiredCount} memes to earn this title`;
+                } else if (type === 'likes') {
+                    description = `Get ${requiredCount} likes on your memes`;
+                } else if (type === 'total_votes') {
+                    description = `Receive ${requiredCount} total votes`;
+                }
+            }
+
+            const buttonClass = isUsing ? 'using' : (hasUnlocked ? 'enabled' : 'disabled');
+            const buttonText = isUsing ? '✓ Using' : (hasUnlocked ? 'Use Title' : 'Locked');
+
+            return `
+                <div class="achievement-item">
+                    <div class="achievement-title-box" style="background: ${titleColor}; color: ${titleTextColor};">
+                        ${icon} ${achievement.name}
+                    </div>
+                    <div class="achievement-description">
+                        <p>${description}</p>
+                        
+                        <!-- PROGRESS BAR HIJAU -->
+                        <div class="achievement-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <span class="progress-text">${currentCount} / ${requiredCount} (${Math.round(progressPercent)}%)</span>
+                        </div>
+                    </div>
+                    <button 
+                        class="btn-use-title ${buttonClass}" 
+                        onclick="${hasUnlocked ? `useTitle('${achievement.name}')` : ''}"
+                        ${!hasUnlocked ? 'disabled' : ''}
+                    >
+                        ${buttonText}
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function useTitle(titleName) {
+        const currentUser = authService.getCurrentUser();
+        if (!currentUser) {
+            showAchievementNotification('Please login first', false);
+            return;
+        }
+
+        const user = userRepository.findById(currentUser.id);
+        if (!user) {
+            showAchievementNotification('User not found', false);
+            return;
+        }
+
+        user.title = titleName;
+        userRepository.update(user.id, { title: titleName });
+        
+        showAchievementNotification(`Title "${titleName}" is now active!`, true);
+        loadAchievements();
+    }
+
+    function showAchievementNotification(message, isSuccess = true) {
+        const notification = document.getElementById('achievementNotification');
+        const messageElement = document.getElementById('achievementNotificationMessage');
+        const content = notification.querySelector('.achievement-notification-content');
+        
+        if (!notification || !messageElement) return;
+        
+        // Update message
+        messageElement.textContent = message;
+        
+        // Update styling based on success/error
+        if (isSuccess) {
+            content.style.background = 'linear-gradient(135deg, #10b981 0%, #34d399 100%)';
+        } else {
+            content.style.background = 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)';
+        }
+        
+        // Show notification
+        notification.classList.add('show');
+        
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+            closeAchievementNotification();
+        }, 3000);
+    }
+
+    function closeAchievementNotification() {
+        const notification = document.getElementById('achievementNotification');
+        if (notification) {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.style.animation = '';
+            }, 300);
+        }
+    }
+
+    // Panggil saat halaman load
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentUser = authService.getCurrentUser();
+        const navUserName = document.getElementById('navUserName');
+        const navUserMenu = document.getElementById('navUserMenu');
+        const navLoginLink = document.getElementById('navLoginLink');
+        const arenaMenu = document.getElementById('arenaMenu');
+        const memberMenu = document.getElementById('memberMenu');
+        const memberMenu3 = document.getElementById('memberMenu3');
+        const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+        const navUserTitle = document.getElementById('navUserTitle');
+
+        if (currentUser) {
+            if (navUserName) navUserName.textContent = currentUser.username;
+            if (navUserMenu) navUserMenu.style.display = 'block';
+            if (navLoginLink) navLoginLink.style.display = 'none';
+            if (arenaMenu) arenaMenu.style.display = 'block';
+            if (memberMenu) memberMenu.style.display = 'block';
+            if (memberMenu3) memberMenu3.style.display = 'block';
+            if (currentUser.role === 'moderator') {
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                if (navUserTitle) navUserTitle.style.display = 'block';
+            } else {
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                if (navUserTitle) navUserTitle.style.display = 'none';
+            }
+        } else {
+            if (navUserName) navUserName.textContent = 'Guest';
+            if (navUserTitle) navUserTitle.style.display = 'none';
+            if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+            if (navUserMenu) navUserMenu.style.display = 'none';
+            if (navLoginLink) navLoginLink.style.display = 'block';
+            if (arenaMenu) arenaMenu.style.display = 'none';
+            if (memberMenu) memberMenu.style.display = 'none';
+            if (memberMenu3) memberMenu3.style.display = 'none';
+        }
+
+        setTimeout(() => {
+            loadAchievements();
+        }, 500);
+    });
+</script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+</html>

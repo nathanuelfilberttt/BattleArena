@@ -1,0 +1,531 @@
+/* Comment Page Styles */
+.comment-page-section {
+    min-height: calc(100vh - 100px);
+    padding: 40px 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.comment-page-wrapper {
+    position: relative;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.comment-page-body {
+    display: flex;
+    gap: 20px;
+    margin-top: 50px;
+    align-items: stretch;
+    min-height: calc(100vh - 250px);
+}
+
+.comment-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.comment-back-btn:hover {
+    transform: scale(1.1);
+}
+
+.comment-back-btn .close-icon {
+    width: 26px;
+    height: 20px;
+}
+
+/* Comment Modal Styles */
+.comment-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.comment-modal-content {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: var(--radius-xl);
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.comment-modal-body {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+}
+
+.comment-meme-section {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    background: #ffffff;
+    padding: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.comment-meme-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.comment-meme-image {
+    width: 100%;
+    height: 65%;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+}
+
+.comment-details-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 30px;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.comment-post-details {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.comment-meme-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 10px;
+    margin-right: 120px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-meme-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.comment-user-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-user-icon {
+    font-size: 1.2rem;
+}
+
+.comment-username {
+    font-size: 0.95rem;
+    color: #000000;
+    font-weight: 500;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-meme-description {
+    color: #999999;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    margin-right: 120px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-meme-categories {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    margin-right: 120px;
+}
+
+.comment-category-tag {
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-category-tag:nth-child(1) {
+    background: #ef4444;
+}
+
+.comment-category-tag:nth-child(2) {
+    background: #8b5cf6;
+}
+
+.comment-category-tag:nth-child(3) {
+    background: #2563eb;
+}
+
+.comment-vote-buttons {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.comment-vote-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    min-width: 80px;
+    justify-content: center;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-vote-btn img {
+    width: 16px;
+    height: 12px;
+    object-fit: contain;
+}
+
+.comment-vote-btn:hover {
+    opacity: 0.8;
+}
+
+.comment-vote-up {
+    background: #10b981;
+    color: white;
+}
+
+.comment-vote-down {
+    background: #ef4444;
+    color: white;
+}
+
+.comment-comments-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.comment-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 15px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    max-height: 240px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-right: 5px;
+}
+
+.comment-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.comment-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.comment-item-modal {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.comment-item-modal:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.comment-item-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comment-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comment-item-username {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #000000;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-item-text {
+    font-size: 0.9rem;
+    color: #333333;
+    margin: 0;
+    line-height: 1.5;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.no-comments {
+    color: #999999;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.more-comments-indicator {
+    color: #666666;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 10px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-disabled-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: #856404;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-disabled-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.comment-disabled-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.comment-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    transition: opacity 0.3s ease;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    background: #ededed;
+    color: #000000;
+    outline: none;
+    font-family: 'League Spartan', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.comment-input:disabled {
+    background: #f5f5f5;
+    color: #999999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.comment-input::placeholder {
+    color: #999999;
+}
+
+.comment-input:focus {
+    border-color: #ff6600;
+    background: #ffffff;
+}
+
+.comment-send-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.comment-send-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.comment-send-btn:disabled:hover {
+    transform: none;
+}
+
+.comment-send-btn:hover {
+    transform: scale(1.1);
+}
+
+.send-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Base comment icon styling */
+.comment-icon-img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    transition: opacity 0.3s;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.comment-icon-img:hover {
+    opacity: 0.7;
+}
+
+.comment-count {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 4px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+/* Comment icon in non-clickable contexts */
+.meme-stat-item .comment-icon-img,
+.btn-comment .comment-icon-img,
+.top-3-comments .comment-icon-img,
+.leaderboard-comments .comment-icon-img {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    pointer-events: none;
+}
+
+/* Comment icon in engagement item (arena.html) */
+.engagement-item .comment-icon-img {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+}
+
+.btn-comment {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive for Comment Modal */
+@media (max-width: 968px) {
+    .comment-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .comment-modal-body {
+        flex-direction: column;
+    }
+
+    .comment-meme-section {
+        max-height: 40vh;
+    }
+
+    .comment-details-section {
+        max-height: 60vh;
+    }
+
+    .comment-page-body {
+        flex-direction: column;
+    }
+}
+

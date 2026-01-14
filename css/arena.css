@@ -1,0 +1,606 @@
+/* Arena Section */
+.arena-section {
+    position: relative;
+    padding: 3rem 0;
+    min-height: calc(100vh - 200px);
+    overflow: hidden;
+}
+
+.arena-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.arena-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.arena-hero {
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-bottom: 4rem;
+}
+
+.arena-welcome {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.arena-title {
+    font-size: var(--font-5xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: var(--spacing-xl);
+    font-family: 'League Spartan', sans-serif;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--pink-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.btn-join-battle {
+    background: linear-gradient(135deg, var(--pink-accent) 0%, var(--pink-light) 100%);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-2xl);
+    border-radius: var(--radius-md);
+    font-size: var(--font-xl);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'League Spartan', sans-serif;
+    box-shadow: var(--shadow-pink);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-join-battle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left var(--transition-slow);
+}
+
+.btn-join-battle:hover::before {
+    left: 100%;
+}
+
+.btn-join-battle:hover {
+    background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-lighter) 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(255, 0, 110, 0.4);
+}
+
+/* Trending Memes Section */
+.trending-memes-section {
+    margin-top: 4rem;
+}
+
+.trending-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.trending-title {
+    font-size: var(--font-4xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'League Spartan', sans-serif;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--pink-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.trending-categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.category-tag {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 0.3rem 0.8rem; 
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.btn-filter-trending {
+    background: var(--pink-accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.3s;
+    font-size: 1rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.btn-filter-trending:hover {
+    background: var(--pink-light);
+}
+
+.trending-memes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.trending-meme-card {
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.trending-meme-card.clickable {
+    cursor: pointer;
+}
+
+.trending-meme-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.trending-meme-card.clickable:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(244, 57, 128, 0.3);
+}
+
+.trending-meme-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.trending-meme-info {
+    padding: 1.5rem;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.trending-meme-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.trending-meme-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0;
+    flex: 1;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-votes-top {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.vote-btn {
+    border: none;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.vote-btn img {
+    width: 20px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.down-icon,
+.up-icon {
+    width: 20px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.vote-btn:hover {
+    opacity: 0.8;
+}
+
+.vote-btn-down {
+    background: #ef4444;
+    color: white;
+}
+
+.vote-btn-up {
+    background: #10b981;
+    color: white;
+}
+
+.trending-meme-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.user-icon {
+    font-size: 1.2rem;
+}
+
+.user-name {
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.95rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.user-title {
+    display: inline-block;
+    background: var(--secondary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    color: white;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.user-title-admin {
+    display: inline-block;
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-description {
+    color: #666666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 1rem;
+    min-height: 40px;
+    gap: 1rem;
+}
+
+.trending-meme-categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+}
+
+.category-tag-small {
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-engagement {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.engagement-item {
+    color: #666666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.engagement-item:hover {
+    color: #000000;
+}
+
+@media (max-width: 768px) {
+    .arena-title {
+        font-size: 2rem;
+    }
+
+    .trending-title {
+        font-size: 1.8rem;
+    }
+
+    .trending-memes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trending-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Filter Modal */
+.filter-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px 20px 20px;
+    box-sizing: border-box;
+}
+
+.filter-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 90%;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    position: relative;
+    margin: auto;
+}
+
+.filter-back-btn {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}
+
+.filter-title {
+    color: black;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.filter-section {
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.filter-section.has-selection {
+    background: #fff4e6;
+}
+
+.filter-section.has-selection .filter-section-title {
+    color: black;
+}
+
+.filter-section.has-selection .filter-radio span,
+.filter-section.has-selection .filter-checkbox span {
+    color: black;
+}
+
+.filter-section-title {
+    color: black;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.filter-radio,
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+    background: white;
+}
+
+.filter-radio:hover,
+.filter-checkbox:hover {
+    background: rgba(255, 102, 0, 0.1);
+}
+
+.filter-radio:has(input[type="radio"]:checked),
+.filter-checkbox:has(input[type="checkbox"]:checked) {
+    background: #ff6600;
+}
+
+.filter-radio input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid #ff6600;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    background: white;
+}
+
+.filter-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid #ff6600;
+    position: relative;
+    flex-shrink: 0;
+    background: white;
+}
+
+.filter-radio input[type="radio"]:checked,
+.filter-checkbox input[type="checkbox"]:checked {
+    background: #ff6600;
+    border-color: #ff6600;
+}
+
+.filter-radio input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: black;
+}
+
+.filter-checkbox input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: black;
+}
+
+.filter-radio span,
+.filter-checkbox span {
+    color: black;
+    font-size: 0.95rem;
+    user-select: none;
+    transition: all 0.2s;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.filter-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-filter-reset {
+    flex: 1;
+    background: transparent;
+    color: var(--pink-accent);
+    border: 2px solid var(--pink-accent);
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.btn-filter-reset:hover {
+    background: var(--pink-accent);
+    color: white;
+}
+
+.btn-filter-apply {
+    flex: 1;
+    background: var(--pink-accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.3s;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.btn-filter-apply:hover {
+    background: var(--pink-light);
+}
+

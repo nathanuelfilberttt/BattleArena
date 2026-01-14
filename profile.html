@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png" alt="Profile Avatar" id="navProfilePfp"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div id="profileContainer"></div>
+    </div>
+
+    <div id="globalModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">Are you sure you want to log out?</p>
+            <div class="modal-actions">
+                <button id="modalConfirmBtn" class="btn-confirm">Yes</button>
+                <button id="modalCancelBtn" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="edit-username-modal">
+        <div class="edit-username-modal-content">
+            <div class="edit-username-modal-header">
+                <h2>Edit Username</h2>
+                <button class="edit-username-close" onclick="hideEditModal()" aria-label="Close">×</button>
+            </div>
+            <div id="editAlert"></div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="newUsername">New Username</label>
+                    <input type="text" id="newUsername" required>
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+                <div class="edit-username-modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="hideEditModal()">Cancel</button>
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <input type="file" id="pfpFileInput" accept="image/*" style="display: none;">
+    
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Comment.js"></script>
+    <script src="js/models/Vote.js"></script>
+    <script src="js/models/Achievement.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/AchievementRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/services/ValidationService.js"></script>
+    <script src="js/utils/FileUploader.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const userRepository = new UserRepository();
+        const memeService = new MemeService();
+        const memeRepository = new MemeRepository();
+        const achievementRepository = new AchievementRepository();
+
+        // --- KONSTANTA PFP & TITLE ---
+        const PROFILE_PFP_DEFAULT_URL = 'assets/default-pfp-black.png'; 
+        const NAV_PFP_DEFAULT_URL = 'assets/default-pfp.png'; 
+        
+        const NO_TITLE_DISPLAY = 'No Title';
+        const DEFAULT_TITLE_DB = 'Newbie'; 
+        const FIRST_UPLOAD_TITLE_DB = 'First Upload'; 
+
+        // Function to update navigation UI
+        function updateNavUI() {
+            // Directly call app's updateNavigation method to avoid recursion
+            if (window.app && typeof window.app.updateNavigation === 'function') {
+                window.app.updateNavigation();
+            }
+        }
+        
+        // --- LOGIC GLOBAL MODAL (HARUS DIDEFINISIKAN SEBELUM loadProfile DIPANGGIL) ---
+        function setupGlobalModal() {
+            const modal = document.getElementById('globalModal');
+            if (!modal) return;
+            
+            const modalTitle = modal.querySelector('#modalTitle');
+            const modalMessage = modal.querySelector('#modalMessage');
+            const modalConfirmBtn = modal.querySelector('#modalConfirmBtn');
+            const modalCancelBtn = modal.querySelector('#modalCancelBtn');
+
+            // Definisikan showModal secara global di window
+            window.showModal = function(message, isAlert = false, confirmAction = null) {
+                modal.style.display = 'flex';
+                
+                if (isAlert) {
+                    modalMessage.textContent = message;
+                    modalConfirmBtn.textContent = 'OK';
+                    modalConfirmBtn.onclick = () => { modal.style.display = 'none'; };
+                    modalCancelBtn.style.display = 'none';
+                    // Jika modalTitle tidak ada di template, tambahkan pesan ke message element
+                    if (!modalTitle) modalMessage.textContent = message;
+                } else {
+                    modalMessage.textContent = message;
+                    modalConfirmBtn.textContent = 'Yes';
+                    modalCancelBtn.textContent = 'Cancel';
+
+                    modalConfirmBtn.onclick = () => {
+                        modal.style.display = 'none';
+                        if (confirmAction) confirmAction();
+                    };
+                    modalCancelBtn.onclick = () => { 
+                        modal.style.display = 'none'; 
+                    };
+                    modalCancelBtn.style.display = 'block';
+                }
+            };
+            
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+        // Panggil segera di awal script!
+        setupGlobalModal();
+        
+        // --- Core Logic ---
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function loadProfile() {
+            if (typeof authService === 'undefined') {
+                setTimeout(loadProfile, 100);
+                return;
+            }
+
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = userRepository.findById(currentUser.id);
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const container = document.getElementById('profileContainer');
+            if (!container) {
+                setTimeout(() => loadProfile(), 100);
+                return;
+            }
+
+            // Inisialisasi PFP
+            if (!user.profilePicture || user.profilePicture === NAV_PFP_DEFAULT_URL) {
+                user.profilePicture = PROFILE_PFP_DEFAULT_URL; 
+                userRepository.update(user.id, { profilePicture: PROFILE_PFP_DEFAULT_URL });
+                authService.updateProfile(user.id, { profilePicture: PROFILE_PFP_DEFAULT_URL });
+            }
+            
+            updateNavPfp(user.profilePicture);
+            displayProfile(user);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return 'N/A';
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = String(date.getFullYear()).slice(-2);
+                return `${day}/${month}/${year}`;
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        // --- PFP HANDLER: Update PFP di Profile dan Navbar ---
+        function updateNavPfp(pfpUrl) {
+            const profilePfpElement = document.getElementById('profileAvatar'); 
+            const navPfpElement = document.getElementById('navProfilePfp'); 
+            
+            if (profilePfpElement) profilePfpElement.src = pfpUrl || PROFILE_PFP_DEFAULT_URL;
+            
+            const navPfpSource = (pfpUrl === PROFILE_PFP_DEFAULT_URL || !pfpUrl) 
+                ? NAV_PFP_DEFAULT_URL : pfpUrl;
+                
+            if (navPfpElement) navPfpElement.src = navPfpSource;
+
+            const currentUser = authService.getCurrentUser();
+            if (currentUser) {
+                authService.updateProfile(currentUser.id, { profilePicture: pfpUrl || PROFILE_PFP_DEFAULT_URL });
+            }
+        }
+
+        function initializePfpUpload() {
+            const avatarImg = document.getElementById('profileAvatar');
+            const fileInput = document.getElementById('pfpFileInput');
+
+            if (avatarImg && fileInput) {
+                avatarImg.style.cursor = 'pointer';
+                avatarImg.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const newPfpUrl = e.target.result;
+                            updateNavPfp(newPfpUrl);
+                            userRepository.update(authService.getCurrentUser().id, { profilePicture: newPfpUrl });
+                            // Solusi 1: PFP notification, menggunakan showModal dengan isAlert=true
+                            window.showModal('Profile Picture updated!', true); 
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+        // --- END PFP HANDLER ---
+
+
+        function displayProfile(user) {
+            const container = document.getElementById('profileContainer');
+            
+            const pfpUrl = user.profilePicture || PROFILE_PFP_DEFAULT_URL;
+            
+            // LOGIC TITLE DISPLAY
+            const currentTitleDisplay = user.title === DEFAULT_TITLE_DB || !user.title 
+                ? NO_TITLE_DISPLAY 
+                : user.title;
+            
+            const joinDate = user.createdAt ? formatDate(user.createdAt) : '23/11/23';
+            
+            // STATS
+            let totalUploads = (user.stats && user.stats.totalUploads) || 0;
+            let totalWins = (user.stats && user.stats.totalWins) || 0;
+            let totalLikes = (user.stats && user.stats.totalLikes) || 0;
+            
+            // Recent Upload logic
+            let recentMemes = memeRepository.findByUserId(user.id);
+            recentMemes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            recentMemes = recentMemes.slice(0, 3);
+            
+            const isModerator = user.role === 'moderator';
+            
+            const recentUploadsSectionHTML = getRecentUploadsHTML(recentMemes, isModerator);
+
+
+            try {
+                container.innerHTML = `
+                    <div class="profile-header-wrapper">
+                        <button class="profile-back-btn" onclick="goBack()" title="Kembali">
+                            <img src="assets/back-white.png" alt="Back" class="back-icon">
+                        </button>
+                        <h1 class="profile-header-outside">${user.username}'s Profile</h1>
+                    </div>
+                    <main class="profile-container">
+                        <div class="profile-box">
+                            <img src="${pfpUrl}" alt="Profile Avatar" class="avatar" id="profileAvatar" title="Click to change Profile Picture">
+                            <div class="profile-right">
+                                <div class="field-group">
+                                    <label>Name</label>
+                                    <div class="input-container-gap">
+                                        <input type="text" id="nameInput" value="${user.username}" readonly>
+                                        <button id="editNameBtn" class="edit-btn fuchsia-btn" onclick="showEditModal()">
+                                            <img src="assets/edit.png" alt="Edit Icon">
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="field-group join-date-field">
+                                    <label>Join Date</label>
+                                    <input type="text" value="${joinDate}" readonly id="joinDateInput">
+                                </div>
+                                <div class="field-group">
+                                    <label>Title</label>
+                                    <div class="input-container-gap">
+                                        <input type="text" id="titleDisplay" value="${currentTitleDisplay}" readonly>
+                                        <button id="editTitleBtn" class="edit-btn fuchsia-btn" onclick="toggleTitleDropdown()">
+                                            <img src="assets/drop-down.png" alt="Dropdown Icon">
+                                        </button>
+                                    </div>
+                                    <div id="titleDropdownList" class="dropdown-list" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bottom-section">
+                            <div class="stats-box">
+                                <h2>Stats</h2>
+                                ${isModerator ? `<div class="stat-item">Role <span>Admin</span></div>` : ''}
+                                <div class="stat-item">Total upload <span>${totalUploads}</span></div>
+                                <div class="stat-item">Total win <span>${totalWins}</span></div>
+                                <div class="stat-item">Total likes <span>${totalLikes}</span></div>
+                            </div>
+                            
+                            ${recentUploadsSectionHTML}
+                        </div>
+
+                        <button id="logoutBtn" class="logout-btn" onclick="showModal('Are you sure you want to log out?', false, handleLogoutConfirm)">Logout</button>
+                    </main>
+                `;
+            } catch (error) {
+                console.error('Error inserting profile HTML:', error);
+            }
+            
+            initializePfpUpload();
+            loadTitleDropdown(user);
+        }
+        
+        // --- LOGIC TITLE DROPDOWN (Perbaikan Duplikasi) ---
+        function loadTitleDropdown(user) {
+             const dropdownList = document.getElementById('titleDropdownList');
+             if (!dropdownList) return;
+            
+             const userMemes = memeRepository.findByUserId(user.id);
+             const totalUploads = userMemes.length;
+             const totalLikes = userMemes.reduce((sum, meme) => sum + (meme.voteCount || 0), 0);
+
+             let dropdownHTML = '';
+             const displayedTitles = new Set(); 
+             const currentTitle = user.title || DEFAULT_TITLE_DB; 
+
+             // --- Title Dasar (No Title, First Upload) ---
+             
+             // 1. No Title (Display)
+             if (!displayedTitles.has(NO_TITLE_DISPLAY)) {
+                 const isSelected = (currentTitle === DEFAULT_TITLE_DB || !user.title);
+                 dropdownHTML += `<div onclick="selectTitle('')" ${isSelected ? 'style="background-color: #f0f0f0; font-weight: bold;"' : ''}>${NO_TITLE_DISPLAY}</div>`;
+                 displayedTitles.add(NO_TITLE_DISPLAY);
+             }
+             
+             // 2. First Upload (Jika syarat 1 upload terpenuhi)
+             if (totalUploads >= 1 && !displayedTitles.has(FIRST_UPLOAD_TITLE_DB)) {
+                  const isSelected = currentTitle === FIRST_UPLOAD_TITLE_DB;
+                  dropdownHTML += `<div onclick="selectTitle('${FIRST_UPLOAD_TITLE_DB}')" ${isSelected ? 'style="background-color: #f0f0f0; font-weight: bold;"' : ''}>${FIRST_UPLOAD_TITLE_DB}</div>`;
+                  displayedTitles.add(FIRST_UPLOAD_TITLE_DB);
+             }
+
+
+             // --- Title dari Achievements ---
+             const achievements = achievementRepository.findAll();
+             achievements.sort((a, b) => (b.requirement.count || 0) - (a.requirement.count || 0));
+
+             achievements.forEach(achievement => {
+                 const requiredCount = achievement.requirement.count || 0;
+                 const achievementName = achievement.name;
+
+                 // Skip jika sudah ditambahkan atau title dasar
+                 if (displayedTitles.has(achievementName) || achievementName === DEFAULT_TITLE_DB || achievementName === FIRST_UPLOAD_TITLE_DB || achievementName === NO_TITLE_DISPLAY) {
+                     return;
+                 }
+                 
+                 let hasUnlocked = false;
+                 if (achievement.requirement.type === 'upload') {
+                     hasUnlocked = totalUploads >= requiredCount;
+                 } else if (achievement.requirement.type === 'total_votes') {
+                     hasUnlocked = totalLikes >= requiredCount;
+                 }
+                
+                 if (hasUnlocked) {
+                     const isSelected = currentTitle === achievementName;
+                     dropdownHTML += `<div onclick="selectTitle('${achievementName}')" ${isSelected ? 'style="background-color: #f0f0f0; font-weight: bold;"' : ''}>${achievementName}</div>`;
+                     displayedTitles.add(achievementName);
+                 }
+             });
+            
+             dropdownList.innerHTML = dropdownHTML;
+        }
+        
+        function selectTitle(titleName) {
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser) {
+                showModal('Please login first', true);
+                return;
+            }
+            
+            const finalTitleDB = titleName === '' ? DEFAULT_TITLE_DB : titleName;
+            
+            try {
+                authService.updateProfile(currentUser.id, { title: finalTitleDB });
+                
+                const titleDisplay = document.getElementById('titleDisplay');
+                const uiTitle = titleName === '' ? NO_TITLE_DISPLAY : titleName;
+                
+                if (titleDisplay) {
+                    titleDisplay.value = uiTitle;
+                }
+                toggleTitleDropdown();
+                
+                updateNavUI(); 
+                loadProfile(); 
+                showModal(`Title updated to "${uiTitle}"`, true);
+            } catch (error) {
+                showModal(error.message, true);
+            }
+        }
+        
+        // --- LOGIC RECENT UPLOAD HTML ---
+        function getRecentUploadsHTML(memes, isModerator) {
+            // Limit to 3 memes only
+            const recentMemes = memes.slice(0, 3);
+            let recentMemesHTML = '';
+            
+            // Get current user to determine userId for memes.html link
+            const currentUser = authService.getCurrentUser();
+            const userId = currentUser ? currentUser.id : '';
+            
+            // Link to memes.html with userId parameter to show all user's memes
+            const viewAllLink = userId ? `memes.html?userId=${userId}` : 'memes.html';
+            
+            recentMemes.forEach(meme => {
+                // Recent upload images should link to memes.html to show all user's memes
+                recentMemesHTML += `
+                    <img src="${meme.imageUrl}" alt="${meme.title}" onclick="window.location.href='${viewAllLink}'" style="cursor: pointer;">
+                `;
+            });
+            
+            return `
+                <div class="upload-box">
+                    <div class="upload-box-header">
+                        <h2>Recent Upload</h2>
+                        <a href="${viewAllLink}" class="view-all-link">View All →</a>
+                    </div>
+                    <div class="upload-list">
+                        ${recentMemesHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openProfileCommentPage(memeId) {
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'member' && currentUser.role !== 'moderator')) {
+                alert('Hanya member dan moderator yang dapat melihat komentar');
+                return;
+            }
+            window.location.href = `comment.html?id=${memeId}`;
+        }
+        
+        // LOGOUT CONFIRMATION 
+        function handleLogoutConfirm() {
+            authService.logout();
+            window.location.href = 'index.html';
+        }
+
+        // EDIT USERNAME
+        function showEditModal() {
+            const currentUser = authService.getCurrentUser();
+            document.getElementById('newUsername').value = currentUser.username;
+            const modal = document.getElementById('editModal');
+            modal.classList.add('show');
+        }
+
+        function hideEditModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.remove('show');
+            document.getElementById('editForm').reset();
+            document.getElementById('editAlert').innerHTML = '';
+        }
+
+        document.getElementById('editForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const alertContainer = document.getElementById('editAlert');
+            alertContainer.innerHTML = '';
+
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const currentUser = authService.getCurrentUser();
+
+            const validation = validationService.validateUsername(newUsername); 
+            if (!validation.isValid) {
+                alertContainer.innerHTML = `<div class="alert alert-error">${validation.error}</div>`;
+                return;
+            }
+
+            const existingUser = userRepository.findByUsername(newUsername);
+            if (existingUser && existingUser.id !== currentUser.id) {
+                alertContainer.innerHTML = '<div class="alert alert-error">Username sudah digunakan</div>';
+                return;
+            }
+
+            try {
+                authService.updateProfile(currentUser.id, { username: newUsername });
+                alertContainer.innerHTML = '<div class="alert alert-success">Username berhasil diubah!</div>';
+                setTimeout(() => {
+                    hideEditModal();
+                    updateNavUI(); 
+                    loadProfile();
+                }, 1000);
+            } catch (error) {
+                alertContainer.innerHTML = `<div class="alert alert-error">${error.message}</div>`;
+            }
+        });
+
+
+        // Wait for DOM and scripts to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                
+                const currentUser = authService.getCurrentUser();
+                if (currentUser) {
+                    updateNavPfp(currentUser.profilePicture);
+                }
+                
+                loadProfile();
+                updateNavUI();
+                
+                // Close modal when clicking outside
+                const editModal = document.getElementById('editModal');
+                if (editModal) {
+                    editModal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            hideEditModal();
+                        }
+                    });
+                }
+            }, 200);
+        });
+        
+        function toggleTitleDropdown() {
+             const dropdownList = document.getElementById('titleDropdownList');
+             const editTitleBtn = document.getElementById('editTitleBtn');
+             if (dropdownList) {
+                 const isOpen = dropdownList.style.display === 'block';
+                 dropdownList.style.display = isOpen ? 'none' : 'block';
+                 
+                 // Rotate dropdown icon
+                 if (editTitleBtn) {
+                     const icon = editTitleBtn.querySelector('img');
+                     if (icon) {
+                         if (isOpen) {
+                             icon.style.transform = 'rotate(0deg)';
+                         } else {
+                             icon.style.transform = 'rotate(180deg)';
+                         }
+                     }
+                 }
+             }
+        }
+    </script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+</html>

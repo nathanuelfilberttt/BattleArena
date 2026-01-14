@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/leaderboard.css">
+    <link rel="stylesheet" href="css/comment.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html" class="active">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png" alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Leaderboard Section -->
+    <section class="leaderboard-section">
+
+        <div class="container">
+            <div class="leaderboard-header">
+                <h1 class="leaderboard-title">LEADERBOARD OF MEME ARENA</h1>
+                <button class="btn-filter" onclick="toggleFilter()">
+                    <img src="assets/filter.png" alt="Filter" class="filter-icon-image">
+                    Filter
+                </button>
+            </div>
+
+            <!-- Filter Modal -->
+            <div id="filterModal" class="filter-modal" style="display: none;">
+                <div class="filter-content">
+                    <button class="filter-back-btn" onclick="closeFilter()">
+                        <img src="assets/back-black.png" alt="Close" class="close-icon">
+                    </button>
+                    <h3 class="filter-title">Filter</h3>
+                    
+                    <!-- Sort By Date -->
+                    <div class="filter-section" id="dateSection">
+                        <h4 class="filter-section-title">SORT BY DATE</h4>
+                        <div class="filter-options">
+                            <label class="filter-radio">
+                                <input type="radio" name="date" value="week" onchange="updateFilterSection('dateSection')">
+                                <span>1 Week Ago</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="date" value="month" onchange="updateFilterSection('dateSection')">
+                                <span>1 Month Ago</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="date" value="6months" onchange="updateFilterSection('dateSection')">
+                                <span>6 Months Ago</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="date" value="12months" onchange="updateFilterSection('dateSection')">
+                                <span>12 Months Ago</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Sort By Categories -->
+                    <div class="filter-section" id="categoriesSection">
+                        <h4 class="filter-section-title">SORT BY CATEGORIES</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Funny" onchange="updateFilterSection('categoriesSection')">
+                                <span>Funny</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Relatable" onchange="updateFilterSection('categoriesSection')">
+                                <span>Relatable</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Dark" onchange="updateFilterSection('categoriesSection')">
+                                <span>Dark</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Wholesome" onchange="updateFilterSection('categoriesSection')">
+                                <span>Wholesome</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="Political" onchange="updateFilterSection('categoriesSection')">
+                                <span>Political</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Sort By Top -->
+                    <div class="filter-section" id="topSection">
+                        <h4 class="filter-section-title">SORT BY TOP</h4>
+                        <div class="filter-options">
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="vote" onchange="updateFilterSection('topSection')">
+                                <span>Vote</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="downvote" onchange="updateFilterSection('topSection')">
+                                <span>Down Vote</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="likedUploaders" onchange="updateFilterSection('topSection')">
+                                <span>Liked Uploaders</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="top" value="activeUploaders" onchange="updateFilterSection('topSection')">
+                                <span>Active Uploaders</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn-filter-reset" onclick="resetFilter()">Reset</button>
+                        <button class="btn-filter-apply" onclick="applyFilter()">Apply</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 3 Leaderboard -->
+            <div class="top-3-leaderboard">
+                <div id="top3Container" class="top-3-grid">
+                    <!-- Top 3 memes will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Leaderboard Container with Pagination -->
+            <div class="leaderboard-container">
+                <button class="leaderboard-nav prev-nav" onclick="leaderboardController.prevPage()">
+                    ❮
+                </button>
+                <div class="leaderboard-slider" id="leaderboardSlider">
+                    <!-- Leaderboard items will be inserted here -->
+                </div>
+                <button class="leaderboard-nav next-nav" onclick="leaderboardController.nextPage()">
+                    ❯
+                </button>
+            </div>
+            <div class="leaderboard-pagination">
+                <span id="pageIndicator">1 / 4</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- War of Meme Section -->
+    <section class="wom-section">
+        <div class="container">
+            <div class="wom-logo">
+                <img src="assets/logo-white.png" alt="Logo" class="wom-logo-icon"> 
+            </div>
+            <h2 class="wom-title">War of Meme</h2>
+            <p class="wom-tagline">
+                Victory doesn't go to the strongest army, but to whoever can post the loudest, 
+                or most unhinged meme that makes the other side question their life choices!
+            </p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        War of Meme is the leading meme voting platform connecting meme creators and 
+                        enthusiasts from all over the world. We provide a fair arena to showcase your 
+                        creativity and determine the best memes through a transparent voting system.
+                    </p>
+                    <p>
+                        With achievement features, an active community, and a sound moderation system, 
+                        we ensure the best experience for all users. Join thousands of other members 
+                        and become part of the largest meme community!
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <h3>1000+</h3>
+                        <p>Active Members</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>5000+</h3>
+                        <p>Meme Uploads</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>20000+</h3>
+                        <p>Total Votes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+            </div>
+            <p>&copy; War of Meme, 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/models/Comment.js"></script>
+    <script src="js/models/Vote.js"></script>
+    <script src="js/models/Achievement.js"></script>
+    <script src="js/models/Arena.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/AchievementRepository.js"></script>
+    <script src="js/repositories/ArenaRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/services/ValidationService.js"></script>
+    <script src="js/controllers/SlideshowController.js"></script>
+    <script src="js/controllers/LeaderboardController.js"></script>
+    <script src="js/utils/FileUploader.js"></script>
+    <script src="js/utils/ReportGenerator.js"></script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Update navigation for index page
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = authService.getCurrentUser();
+            const navUserName = document.getElementById('navUserName');
+            const navUserMenu = document.getElementById('navUserMenu');
+            const navLoginLink = document.getElementById('navLoginLink');
+            const memberMenu = document.getElementById('memberMenu');
+            const memberMenu3 = document.getElementById('memberMenu3');
+
+            const arenaMenu = document.getElementById('arenaMenu');
+            const moderatorMenuNav = document.getElementById('moderatorMenuNav');
+            const navUserTitle = document.getElementById('navUserTitle');
+            const logoutMenu = document.getElementById('logoutMenu');
+
+            if (currentUser) {
+                if (navUserName) navUserName.textContent = currentUser.username;
+                if (navUserMenu) navUserMenu.style.display = 'block';
+                if (navLoginLink) navLoginLink.style.display = 'none';
+                if (arenaMenu) arenaMenu.style.display = 'block';
+                if (memberMenu) memberMenu.style.display = 'block';
+                if (memberMenu3) memberMenu3.style.display = 'block';
+                if (currentUser.role === 'moderator') {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'block';
+                    if (navUserTitle) navUserTitle.style.display = 'block';
+                } else {
+                    if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                    if (navUserTitle) navUserTitle.style.display = 'none';
+                }
+                // Logout button is now in profile card, not in navbar
+                if (logoutMenu) logoutMenu.style.display = 'none';
+            } else {
+                if (navUserName) navUserName.textContent = 'Guest';
+                if (navUserTitle) navUserTitle.style.display = 'none';
+                if (moderatorMenuNav) moderatorMenuNav.style.display = 'none';
+                if (navUserMenu) navUserMenu.style.display = 'none';
+                if (navLoginLink) navLoginLink.style.display = 'block';
+                if (arenaMenu) arenaMenu.style.display = 'none';
+                if (memberMenu) memberMenu.style.display = 'none';
+                if (memberMenu3) memberMenu3.style.display = 'none';
+            }
+
+            // Initialize leaderboard
+            leaderboardController.init();
+            
+            // Setup radio button toggle functionality setelah modal ada
+            setTimeout(() => {
+                setupRadioButtonToggle();
+            }, 100);
+        });
+        
+        function setupRadioButtonToggle() {
+            // Setup untuk semua radio button di filter modal
+            const filterModal = document.getElementById('filterModal');
+            if (!filterModal) return;
+            
+            const radioButtons = filterModal.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                // Hapus listener lama jika ada dengan clone
+                const newRadio = radio.cloneNode(true);
+                radio.parentNode.replaceChild(newRadio, radio);
+                
+                // Flag untuk menandai bahwa kita sedang uncheck
+                let isUnchecking = false;
+                
+                // Tambahkan mousedown listener di capture phase untuk toggle
+                newRadio.addEventListener('mousedown', function(e) {
+                    // Jika sudah checked, uncheck langsung dan prevent semua event
+                    if (this.checked) {
+                        isUnchecking = true;
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        // Uncheck langsung
+                        this.checked = false;
+                        const sectionId = this.closest('.filter-section')?.id;
+                        if (sectionId) {
+                            updateFilterSection(sectionId);
+                        }
+                        return false;
+                    } else {
+                        isUnchecking = false;
+                    }
+                }, true); // Capture phase
+                
+                // Prevent click event jika sedang uncheck
+                newRadio.addEventListener('click', function(e) {
+                    if (isUnchecking) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        isUnchecking = false;
+                        return false;
+                    }
+                }, true); // Capture phase
+            });
+        }
+        
+        // Setup juga saat modal dibuka
+        function toggleFilter() {
+            const modal = document.getElementById('filterModal');
+            if (modal) {
+                const currentDisplay = modal.style.display || window.getComputedStyle(modal).display;
+                if (currentDisplay === 'none' || currentDisplay === '') {
+                    modal.style.display = 'flex';
+                    // Setup radio button toggle saat modal dibuka
+                    setTimeout(() => {
+                        setupRadioButtonToggle();
+                    }, 50);
+                } else {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

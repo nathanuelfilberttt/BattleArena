@@ -1,0 +1,491 @@
+.memes-content {
+    padding: var(--spacing-md);
+    min-height: 80vh;
+}
+
+.memes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.memes-back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.memes-back-btn:hover {
+    transform: scale(1.1);
+}
+
+.memes-back-btn .back-icon {
+    width: 26px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.memes-header h1 {
+    flex: 1;
+    margin: 0;
+}
+
+.memes-header h1 {
+    font-size: var(--font-3xl);
+    color: var(--text-primary);
+    font-family: 'League Spartan', sans-serif;
+}
+
+.btn-upload {
+    padding: 0.75rem 1.5rem;
+    background: var(--pink-accent);
+    color: white;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+    width: auto; 
+    white-space: nowrap; 
+}
+
+.btn-upload:hover {
+    background: var(--pink-dark);
+}
+
+.filter-pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    color: var(--text-primary);
+}
+
+.filter-group select {
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    background: var(--dark-bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    font-size: var(--font-base);
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pagination .btn-page {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--dark-bg-secondary);
+    color: var(--text-dark);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination .btn-page:hover {
+    background: var(--dark-bg-tertiary);
+}
+
+.pagination .btn-page.active {
+    background: var(--pink-accent);
+    color: white;
+    border-color: var(--pink-accent);
+}
+
+/* Meme Grid and Card */
+.memes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Trending meme card styles*/
+.trending-meme-card {
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.trending-meme-card.clickable {
+    cursor: pointer;
+}
+
+.trending-meme-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.trending-meme-card.clickable:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(244, 57, 128, 0.3);
+}
+
+.trending-meme-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.trending-meme-info {
+    padding: 20px;
+}
+
+.trending-meme-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.trending-meme-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0;
+    flex: 1;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-votes-top {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.vote-btn {
+    border: none;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.vote-btn img {
+    width: 20px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.down-icon,
+.up-icon {
+    width: 20px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.vote-btn:hover {
+    opacity: 0.8;
+}
+
+.vote-btn-down {
+    background: #ef4444;
+    color: white;
+}
+
+.vote-btn-up {
+    background: #10b981;
+    color: white;
+}
+
+.trending-meme-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.user-icon {
+    font-size: 1.2rem;
+}
+
+.user-name {
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.95rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.user-title {
+    display: inline-block;
+    background: var(--secondary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    color: white;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.user-title-admin {
+    display: inline-block;
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-description {
+    color: #666666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.trending-meme-categories {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.category-tag-small {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.trending-meme-engagement {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.engagement-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #666666;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.comment-icon-img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.comment-count {
+    font-weight: 600;
+}
+
+.meme-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s;
+}
+
+.meme-image.clickable {
+    cursor: pointer;
+}
+
+.meme-image.clickable:hover {
+    opacity: 0.9;
+}
+
+.meme-info {
+    padding: 1.5rem;
+}
+
+.meme-title {
+    font-size: var(--font-xl);
+    color: black;
+    margin-bottom: 0.5rem;
+}
+
+.tag-category {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    margin-bottom: 1rem;
+}
+
+.meme-description {
+    color: var(--text-secondary);
+    font-size: var(--font-base);
+    margin-bottom: 1rem;
+}
+
+/* Stats */
+.meme-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-sm);
+    color: var(--text-tertiary);
+    border-top: 1px solid var(--dark-bg-tertiary);
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    font-size: 1.1em;
+    margin-right: 0.2rem;
+    color: var(--pink-accent);
+}
+
+.meme-stat-item.clickable {
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.meme-stat-item.clickable:hover {
+    opacity: 0.7;
+}
+
+/* Actions */
+.meme-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-vote, .btn-comment {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.btn-vote {
+    background: var(--success-color);
+    color: white;
+}
+
+.btn-vote.voted {
+    background: var(--danger-color);
+}
+
+.btn-comment {
+    background: var(--dark-bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Comments Section */
+.comments-section {
+    border-top: 1px solid var(--dark-bg-tertiary);
+    padding-top: 1rem;
+}
+
+.comments-list {
+    margin-bottom: 1rem;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px dotted var(--dark-bg-tertiary);
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+}
+
+.comment-text {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-left: 1rem;
+}
+
+.no-comments-text {
+    color: var(--text-tertiary);
+    font-size: var(--font-sm);
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    resize: vertical;
+    font-family: 'League Spartan', sans-serif;
+}
+
+.btn-submit-comment {
+    width: auto;
+    padding: 0.5rem 1rem;
+    background: var(--pink-accent);
+    color: white;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+@media (max-width: 768px) {
+    .memes-content {
+        padding: var(--spacing-xl) 0;
+    }
+    .filter-pagination-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .memes-grid {
+        grid-template-columns: 1fr;
+    }
+    .meme-card {
+        max-width: 100%;
+    }
+}

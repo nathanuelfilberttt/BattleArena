@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memes - War of Meme</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/memes.css">
+    <link rel="icon" href="assets/logo-white.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="assets/logo-white.png" alt="Logo" class="nav-logo-icon"></a>
+                <a href="https://discord.gg/rmemes"><img src="assets/discord.png" alt="Discord" class="nav-discord-icon"></a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-center" id="arenaMenu" style="display: none;">
+                    <a href="arena.html">Arena</a>
+                </li>
+                <li class="nav-center" id="memberMenu" style="display: none;">
+                    <a href="upload-meme.html">Upload Meme</a>
+                </li>
+                <li class="nav-center">
+                    <a href="index.html">Leaderboard</a>
+                </li>
+                <li class="nav-center" id="memberMenu3" style="display: none;">
+                    <a href="achievement.html">Achievement</a>
+                </li>
+                <li class="nav-center" id="moderatorMenuNav" style="display: none;">
+                    <a href="admin.html">Admin Panel</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-user-info">
+                        <span id="navUserName">Guest</span>
+                        <span id="navUserTitle" class="nav-user-title" style="display: none;">Admin</span>
+                    </div>
+                    <a href="profile.html" class="nav-user-icon"><img src="assets/default-pfp.png" alt="Profile Avatar"></a>
+                </div>
+                <div id="navUserMenu" style="display: none;">
+                    <ul class="nav-menu-right">
+                    </ul>
+                </div>
+                <div id="navLoginLink" style="display: none;">
+                    <a href="login.html" class="nav-login-link"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container memes-content">
+        <div class="memes-header">
+            <button class="memes-back-btn" onclick="goBack()" title="Kembali">
+                <img src="assets/back-white.png" alt="Back" class="back-icon">
+            </button>
+            <h1>My Memes</h1>
+            <a href="upload-meme.html" class="btn btn-upload">+ Upload Meme</a>
+        </div>
+
+        <div class="filter-pagination-wrapper">
+            <div class="filter-group">
+                <label for="categoryFilter">Categories:</label>
+                <select id="categoryFilter">
+                    <option value="">All</option>
+                    <option value="Funny">Funny</option>
+                    <option value="Relatable">Relatable</option>
+                    <option value="Dark">Dark</option>
+                    <option value="Wholesome">Wholesome</option>
+                    <option value="Political">Political</option>
+                </select>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+
+        <div id="memesContainer" class="memes-grid"></div>
+    </div>
+
+    <script src="js/core/Database.js"></script>
+    <script src="js/core/AOP.js"></script>
+    <script src="js/models/User.js"></script>
+    <script src="js/models/Meme.js"></script>
+    <script src="js/repositories/UserRepository.js"></script>
+    <script src="js/repositories/MemeRepository.js"></script>
+    <script src="js/repositories/VoteRepository.js"></script>
+    <script src="js/repositories/CommentRepository.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/MemeService.js"></script>
+    <script src="js/services/ValidationService.js"></script>
+    <script src="js/utils/FileUploader.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const memeService = new MemeService();
+        const memeRepository = new MemeRepository();
+        const userRepository = new UserRepository();
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function loadMemes() {
+            const currentUser = authService.getCurrentUser();
+            const category = document.getElementById('categoryFilter').value;
+            
+            // 1. Dapatkan semua memes
+            let memes = memeRepository.findAll();
+
+            // 2. Check for userId parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const userIdParam = urlParams.get('userId');
+            
+            let targetUserId = null;
+            
+            if (userIdParam) {
+                // If userId is provided in URL, use it (for viewing other users' memes)
+                targetUserId = userIdParam;
+            } else if (currentUser) {
+                // If no userId in URL, use current logged in user
+                targetUserId = currentUser.id;
+            } else {
+                // If no userId and no current user, show error
+                const container = document.getElementById('memesContainer');
+                container.innerHTML = '<div class="no-memes-found"><p style="text-align: center; color: var(--danger-color); font-weight: bold;">Anda harus login untuk melihat memes Anda.</p></div>';
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            // Memfilter memes yang userId-nya cocok dengan targetUserId
+            memes = memes.filter(m => m.userId === targetUserId);
+
+
+            // 3. Filter berdasarkan Kategori (setelah filter user)
+            if (category) {
+                memes = memes.filter(m => m.category === category);
+            }
+
+            // Sort by newest first
+            memes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            // Pagination
+            const totalPages = Math.ceil(memes.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedMemes = memes.slice(start, end);
+
+            displayMemes(paginatedMemes);
+            displayPagination(totalPages);
+        }
+
+        function displayMemes(memes) {
+            const container = document.getElementById('memesContainer');
+            
+            if (memes.length === 0) {
+                container.innerHTML = '<div class="no-memes-found"><p style="text-align: center; color: var(--text-secondary);">There is no meme yet.</p></div>';
+                return;
+            }
+
+            container.innerHTML = memes.map(meme => {
+                // Get user info for title display
+                let username = meme.username || 'username';
+                let userTitle = '';
+                let isAdmin = false;
+                
+                if (meme.userId) {
+                    const user = userRepository.findById(meme.userId);
+                    if (user) {
+                        username = user.username || username;
+                        userTitle = user.title || '';
+                        isAdmin = user.role === 'moderator';
+                    }
+                }
+                
+                // Format username for display
+                const displayUsername = username.toLowerCase().replace(/\s+/g, '');
+                
+                // Check if user can access comments (member or moderator)
+                const currentUser = authService.getCurrentUser();
+                const canAccessComments = currentUser && (currentUser.role === 'member' || currentUser.role === 'moderator');
+                const clickableClass = canAccessComments ? 'clickable' : '';
+                const cardClickHandler = canAccessComments ? `onclick="openMemesCommentPage('${meme.id}')"` : '';
+                
+                return `
+                    <div class="trending-meme-card ${clickableClass}" ${cardClickHandler}>
+                        <img src="${meme.imageUrl}" alt="${meme.title}" class="trending-meme-image">
+                        <div class="trending-meme-info">
+                            <div class="trending-meme-header">
+                                <h3 class="trending-meme-title">${meme.title || 'Untitled'}</h3>
+                                <div class="trending-meme-votes-top" onclick="event.stopPropagation()">
+                                    <button class="vote-btn vote-btn-up"><img src="assets/up-vote.png" alt="Up" class="up-icon"> ${meme.voteCount || 0}</button>
+                                    <button class="vote-btn vote-btn-down"><img src="assets/down-vote.png" alt="Down" class="down-icon"> ${meme.downvoteCount || 10}</button>
+                                </div>
+                            </div>
+                            <div class="trending-meme-user">
+                                <span class="user-icon">🧙</span>
+                                <span class="user-name">@${displayUsername}</span>
+                                ${isAdmin ? '<span class="user-title-admin">Admin</span>' : (userTitle ? `<span class="user-title">${userTitle}</span>` : '<span class="user-title">Newbie</span>')}
+                            </div>
+                            <p class="trending-meme-description">${meme.description || 'Description ini adalah meme yang akan digunakan sebagai dummy'}</p>
+                            <div class="trending-meme-footer">
+                                <div class="trending-meme-categories">
+                                    ${getCategoryTags(meme.category)}
+                                </div>
+                                <div class="trending-meme-engagement">
+                                    <span class="engagement-item">
+                                        <img src="assets/comment.png" alt="Comment" class="comment-icon-img">
+                                        <span class="comment-count">${meme.commentCount || 0}</span>
+                                    </span>
+                                    <span class="engagement-item">🔗</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Load comments for each meme
+            memes.forEach(meme => {
+                loadComments(meme.id);
+            });
+        }
+
+        function displayPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            if (currentPage > 1) {
+                html += `<button class="btn-page" onclick="goToPage(${currentPage - 1})">Previous</button>`;
+            }
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="btn-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            if (currentPage < totalPages) {
+                html += `<button class="btn-page" onclick="goToPage(${currentPage + 1})">Next</button>`;
+            }
+            pagination.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadMemes();
+        }
+
+        function voteMeme(memeId) {
+            try {
+                const result = memeService.voteMeme(memeId);
+                loadMemes();
+            } catch (error) {
+                // Menggunakan modal dari app.js
+                showModal(error.message, true);
+            }
+        }
+
+        function toggleComments(memeId) {
+            const commentsSection = document.getElementById(`comments-${memeId}`);
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadComments(memeId) {
+            const comments = memeService.getComments(memeId);
+            const container = document.getElementById(`comments-list-${memeId}`);
+            if (!container) return;
+
+            if (comments.length === 0) {
+                container.innerHTML = '<p class="no-comments-text">No comments yet</p>';
+                return;
+            }
+
+            // Ganti ikon komentar dengan teks emoji
+            container.innerHTML = comments.map(comment => `
+                <div class="comment-item">
+                    <div class="comment-author">${comment.username}</div>
+                    <div class="comment-text">${comment.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function addComment(memeId) {
+            const text = document.getElementById(`comment-text-${memeId}`).value.trim();
+            if (!text) {
+                // Menggunakan modal dari app.js
+                showModal('Comment can not be empty', true);
+                return;
+            }
+
+            try {
+                memeService.addComment(memeId, text);
+                document.getElementById(`comment-text-${memeId}`).value = '';
+                loadComments(memeId);
+                // Setelah komen ditambahkan, refresh meme untuk update comment count
+                loadMemes(); 
+            } catch (error) {
+                // Menggunakan modal dari app.js
+                showModal(error.message, true);
+            }
+        }
+
+        function openMemesCommentPage(memeId) {
+            const currentUser = authService.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'member' && currentUser.role !== 'moderator')) {
+                alert('Hanya member dan moderator yang dapat melihat komentar');
+                return;
+            }
+            window.location.href = `comment.html?id=${memeId}`;
+        }
+
+        function getCategoryTags(category) {
+            // Map categories to colors (matching comment.html category colors)
+            const categoryColorMap = {
+                'Funny': '#ef4444',      // Red
+                'Relatable': '#8b5cf6',  // Purple
+                'Dark': '#2563eb',       // Blue
+                'Wholesome': '#10b981',  // Green
+                'Political': '#f59e0b'   // Orange/Amber
+            };
+
+            const mainCategory = category || 'kategories';
+            const mainColor = categoryColorMap[mainCategory] || '#6b7280'; // Gray as default
+
+            return `
+                <span class="category-tag-small" style="background: ${mainColor}; color: #ffffff;">#${mainCategory.toLowerCase()}</span>
+                <span class="category-tag-small" style="background: #6b7280; color: #ffffff;">#kategories</span>
+            `;
+        }
+
+
+        document.getElementById('categoryFilter').addEventListener('change', () => {
+            currentPage = 1;
+            loadMemes();
+        });
+
+        loadMemes();
+
+        // Panggil fungsi updateNavUI dari app.js
+        window.updateNavUI();
+
+    </script>
+    <script src="js/utils/ColorAdaptiveController.js"></script>
+</body>
+</html>
